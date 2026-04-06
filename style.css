@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --text-color: #1a1c20;
+    --link-color: #4a76ee;
+    --background-color: #eeeff1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    padding: 0 100px;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    align-items: center;
+}
+
+nav .left a {
+    color: var(--text-color);
+    font-size: 22px;
+    font-weight: 600;
+}
+
+nav .right a {
+    color: var(--text-color);
+    margin: 0 10px;
+}
+
+nav .right a:last-child {
+    border: 5px solid black;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+
+nav .right a:last-child span {
+    margin: 5px;
+}
+
+/* hero section  */
+
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    padding: 0 50px;
+    margin: 50px 0;
+    align-items: center;
+}
+
+.hero-section h1 {
+    font-size: 50px;
+}
+
+.hero-section p {
+    font-weight: 300;
+    line-height: normal;
+}
+
+.links a {
+    display: inline-block;
+    margin: 10px 0;
+    border: 1px solid var(--link-color);
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
+.myImage img {
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+/* tech stacks */
+.techStack{
+    margin: 100px 0;
+}
+
+.description {
+    text-align: center;
+}
+
+.description h2 {
+    font-size: 30px;
+}
+
+.list-stacks {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-stacks ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.list-stacks ul li {
+    border: 1px solid grey;
+    padding: 10px 50px;
+    border-radius: 5px;
+    margin: 10px 10px;
+}
+
+@media (max-width: 1100px) {
+    /* hero-section */
+    .hero-section {
+        flex-direction: column-reverse;
+        padding: 0;
+    }
+
+    .hero-section p {
+        text-align: justify;
+    }
+
+    .hero-section h1 {
+        text-align: center;
+    }
+
+    .links {
+        text-align: center;
+    }
+}
+
+@media (max-width: 650px) {
+    /* navbar */
+    nav {
+        padding: 0 20px;
+    }
+
+    nav .right a span {
+        display: none;
+    }
+
+    nav .right img {
+        height: 20px;
+        width: 20px;
+    }
+
+    nav .right a:last-child {
+        color: var(--text-color);
+        border: none;
+        padding: 0;
+    }
+
+    /* tech stack list  */
+    .techStack{
+        margin: 50px 0;
+    }
+
+    .list-stacks ul li {
+        border: 1px solid grey;
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-size: 10px;
+        gap: 0;
+    }
+}

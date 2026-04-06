@@ -28,6 +28,10 @@ h1, h2, h3 {
     font-weight: 500;
 }
 
+a {
+    text-decoration: none;
+}
+
 p {
     font-family: var(--secondary-font);
     font-weight: 300;
@@ -184,7 +188,7 @@ ul li {
 }
 
 .fake-projects h2 {
-    padding: 10px;
+    padding: 10px 20px;
     background-color: var(--main-color);
     color: white;
     letter-spacing: 2px;
@@ -197,14 +201,25 @@ ul li {
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap: 10px;
     border: 1px solid var(--main-color);
-}
+}   
 
 .testimonials {
     border: 1px solid var(--main-color);
     max-width: 1200px;
 }
 
+footer {
+    text-align: center;
+}
+
 /* ============== media questies =========== */
+/* laptop */
+@media (max-width: 1150px) {
+     .list-projects {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }  
+}
+
 /* tablets */
 @media (max-width: 980px) {
     .myImage img {
@@ -253,6 +268,23 @@ ul li {
 
     .list-stacks ul li {
         font-size: .5em;
+    }
+
+    /* .activity-section */
+    .projects h2 {
+        font-size: 1em;
+    }
+
+    .list-projects {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }   
+
+    .list-projects h3 {
+        font-size: 1em;
+    }
+
+    .list-projects p {
+        font-size: .75em;
     }
 }
 

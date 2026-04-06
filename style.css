@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 :root {
     --text-color: #1a1c20;
-    --link-color: #4a76ee;
+    --main-color: #1B6CA8;
     --background-color: #eeeff1;
+    --main-font: 'Poppins', sans-serif;
+    --secondary-font: 'Inter', sans-serif;
 }
 
 * {
@@ -17,75 +20,75 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
     background-color: var(--background-color);
-    padding: 0 100px;
 }
 
-a {
-    color: var(--link-color);
-    text-decoration: none;
+h1 {
+    font-family: var(--main-font);
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    height: 80px;
-    align-items: center;
-}
-
-nav .left a {
-    color: var(--text-color);
-    font-size: 22px;
-    font-weight: 600;
-}
-
-nav .right a {
-    color: var(--text-color);
-    margin: 0 10px;
-}
-
-nav .right a:last-child {
-    border: 5px solid black;
-    border-radius: 10px;
-    padding: 5px 15px;
-}
-
-nav .right a:last-child span {
-    margin: 5px;
+p {
+    font-family: var(--secondary-font);
+    font-weight: 300;
 }
 
 /* hero section  */
 
-.hero-section {
+.myImage img {
+    border: 1px solid grey;
+}
+
+.header-section {
+    padding: 0 25%;
     display: flex;
-    justify-content: space-between;
-    gap: 50px;
+    justify-content: center;
     padding: 0 50px;
     margin: 50px 0;
-    align-items: center;
+    gap: 15px;
 }
 
-.hero-section h1 {
-    font-size: 50px;
+.intro .introduction h1 {
+    /* font-size: 50px; */
+    font-size: 2.5em;
+    font-weight: 500;
+    
 }
 
-.hero-section p {
+.intro .introduction p {
     font-weight: 300;
     line-height: normal;
+    font-size: 1.25em;
+    letter-spacing: 10%;
 }
 
-.links a {
+.socials img{
     display: inline-block;
-    margin: 10px 0;
-    border: 1px solid var(--link-color);
-    padding: 0 10px;
-    border-radius: 5px;
+    margin: 10px 10px 10px 0;
 }
 
-.myImage img {
-    border-radius: 50%;
-    border: 1px solid black;
+.contact-details {
+    display: flex;
+    margin: 10px 0;
+    justify-content: space-between;
+}
+.header {
+    font-weight: 500;
+}
+
+.desc {
+    font-size: 12px;
+}
+
+.contacts {
+    margin: 0 10px;
+}
+
+.message-section .message {
+    padding: 5px 20px;
+    background-color: var(--main-color);
+    font-family: var(--secondary-font);
+    color: white;
+    font-family: 'Poo';
 }
 
 /* tech stacks */
@@ -122,57 +125,96 @@ nav .right a:last-child span {
     margin: 10px 10px;
 }
 
-@media (max-width: 1100px) {
-    /* hero-section */
-    .hero-section {
-        flex-direction: column-reverse;
-        padding: 0;
-    }
 
-    .hero-section p {
-        text-align: justify;
-    }
+/* dekstop */
+@media (max-width: 1250px) {
+    
+}
+     
+                        
 
-    .hero-section h1 {
-        text-align: center;
-    }
+/* laptops */
 
-    .links {
-        text-align: center;
-    }
+@media (max-width: 1024px) {
+    /* body {
+        padding: 0 5%;
+    } */
 }
 
-@media (max-width: 650px) {
-    /* navbar */
-    nav {
-        padding: 0 20px;
+/* tablets */
+@media (max-width: 870px) {
+    .myImage img {
+        height: 180px;
+        width: 180px;
     }
 
-    nav .right a span {
-        display: none;
+    .intro .introduction h1 {
+    /* font-size: 50px; */
+        font-size: 2em;
+        font-weight: 500;
     }
 
-    nav .right img {
-        height: 20px;
-        width: 20px;
+    .intro .introduction p {
+        font-weight: 300;
+        line-height: normal;
+        font-size: 1em;
+        letter-spacing: 10%;
     }
 
-    nav .right a:last-child {
-        color: var(--text-color);
-        border: none;
-        padding: 0;
+    .socials img {
+        height: 24px;
+        width: 24px;
     }
 
-    /* tech stack list  */
-    .techStack{
-        margin: 50px 0;
+    .header {
+        font-weight: 500;
+        font-size: 16px;
     }
 
-    .list-stacks ul li {
-        border: 1px solid grey;
-        padding: 10px 25px;
-        border-radius: 5px;
+    .desc {
         font-size: 10px;
-        gap: 0;
     }
 }
+
+
+@media (max-width: 768px) {
+    .myImage img {
+        height: 150px;
+        width: 150px;
+    }
+
+    .intro .introduction h1 {
+    /* font-size: 50px; */
+        font-size: 1.75em;
+        font-weight: 500;
+    }
+
+    .intro .introduction p {
+        font-weight: 300;
+        line-height: normal;
+        font-size: .75em;
+        letter-spacing: 10%;
+    }
+
+    .socials img {
+        height: 16px;
+        width: 16px;
+    }
+
+    .header {
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .desc {
+        font-size: 8px;
+    }
+
+    @media (max-width: 640px) {
+        .header-section {
+            padding: 0 5%;
+            
+        }
+    }
+}
+    

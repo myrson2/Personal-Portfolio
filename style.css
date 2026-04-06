@@ -23,7 +23,7 @@ body {
     background-color: var(--background-color);
 }
 
-h1 {
+h1, h2 {
     font-family: var(--main-font);
 }
 
@@ -31,7 +31,6 @@ p {
     font-family: var(--secondary-font);
     font-weight: 300;
 }
-
 /* hero section  */
 
 .myImage img {
@@ -39,11 +38,12 @@ p {
 }
 
 .header-section {
-    padding: 0 10%;
-    display: flex;
-    justify-content: center;
-    padding: 0 50px;
-    margin: 50px 0;
+    display: flex;  
+    justify-content: flex-start;
+    margin: 50px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+    padding-bottom: 20px;
     gap: 50px;
 }
 
@@ -68,8 +68,7 @@ p {
 
 .contact-details {
     display: flex;
-    margin: 10px 0;
-    justify-content: space-between;
+    margin: 10px auto;
 }
 .header {
     font-weight: 500;
@@ -83,69 +82,94 @@ p {
     margin: 0 10px;
 }
 
+.message-section {
+    display: flex;
+    margin-left: auto;
+    align-items: flex-start;
+    gap: 10px;
+}
+
 .message-section .message {
     padding: 5px 20px;
     background-color: var(--main-color);
     font-family: var(--secondary-font);
     color: white;
-    font-family: 'Poo';
+}
+
+.message-section .message:hover {
+    filter: brightness(.8);
+}
+
+.theme-mode img {
+    height: 24px;
+    width: 24px;
+}
+
+/* about me section */
+.skill-section {
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.mySkills {
+    display: flex;
+    width: 100%;
+    gap: 50px; /* Matches header-section gap for alignment */
+    align-items: flex-start;
+}
+
+.about-me-section {
+    /* width: 80%; */
+    flex: 3;
+}
+
+.about-me-section h2 {
+     margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: 500;
+}
+
+.about-me-section p {
+    text-align: justify;
+    line-height: 1.5em;
+}
+
+.tech-stack-section {
+    /* width: 20%; */
+    flex: 1;
 }
 
 /* tech stacks */
-.techStack{
-    margin: 100px 0;
-}
-
-.description {
+.list-stacks h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: 500;
     text-align: center;
 }
 
-.description h2 {
-    font-size: 30px;
-}
-
-.list-stacks {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.list-stacks ul{
+ul {
     list-style-type: none;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 10px;
 }
 
-.list-stacks ul li {
-    border: 1px solid grey;
-    padding: 10px 50px;
-    border-radius: 5px;
-    margin: 10px 10px;
+ul li {
+    font-family: var(--secondary-font);
+    font-weight: 300;
+    border: 1px solid black;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: .75em;
 }
 
-
-/* dekstop */
-@media (max-width: 1250px) {
-    
-}
-     
-                        
-
-/* laptops */
-
-@media (max-width: 1024px) {
-    .header-section {
-        gap: 20px;
-    }
-    /* body {
-        padding: 0 5%;
-    } */
-}
-
+/* ============== media questies =========== */
 /* tablets */
-@media (max-width: 870px) {
+@media (max-width: 980px) {
     .myImage img {
         height: 180px;
         width: 180px;
@@ -177,10 +201,31 @@ p {
     .desc {
         font-size: 10px;
     }
+
+    /* skills section  */
+    .mySkills {
+      gap: 25px;
+    }
+    .about-me-section h2, .list-stacks h2 {
+        font-size: 1.75em;
+    }
+
+    .about-me-section p {
+        font-size: .75em;
+    }
+
+    .list-stacks ul li {
+        font-size: .5em;
+    }
 }
 
 
 @media (max-width: 768px) {
+    .header-section {
+        margin: 20px auto;
+        max-width: 800px;
+        gap: 25px;
+    }
     .myImage img {
         height: 150px;
         width: 150px;
@@ -212,12 +257,14 @@ p {
     .desc {
         font-size: 8px;
     }
-
-    @media (max-width: 640px) {
-        .header-section {
-            padding: 0 5%;
-            gap: 5px;
-        }
+    /* skills section  */
+    
+    .mySkills {
+        flex-direction: column;
+        align-items: center;
     }
 }
+
+    @media (max-width: 640px) {
+    }
     

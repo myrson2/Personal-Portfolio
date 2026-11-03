@@ -100,7 +100,11 @@ jobs:
 
       - name: Build project artifacts
         working-directory: ./frontend
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          export PATH="$PWD/node_modules/.bin:$PATH"
+          command -v vite
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -115,4 +119,3 @@ jobs:
       # ── Backend → Render ──────────────────────────────────────────
       - name: Trigger Render backend re-deploy
         run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
-

@@ -66,6 +66,7 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) a
 - [`frontend/src/setupTests.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/setupTests.js): JSDOM environment polyfills (e.g. `scrollBy`).
 - [`frontend/src/styles/retro-pixel.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/retro-pixel.css): Retro design system tokens, stepped borders, tactile `:active` button offsets, and monospace typography.
 - [`frontend/src/styles/layout.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/layout.css): Two-column asymmetrical layout, RTL continuous marquee, and mobile responsive collapse.
+  - Updated CSS: added `.compact-project-row` rule with consistent 1px border and `box-shadow: 2px 2px 0 var(--border-dark);` to match `.cert-card` and `.featured-project-card`.
 - [`frontend/src/services/api.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Fetch wrappers with client-side fallback safety.
 - [`frontend/src/components/Header/ProfileHeader.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Header/ProfileHeader.jsx): Header with avatar overlap and 3 CTAs.
 - [`frontend/src/components/About/AboutSection.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/About/AboutSection.jsx): Narrative, lowercase socials, and 4-column stat bar.

@@ -74,3 +74,41 @@ export async function postContactPlaceholder(payload) {
   return await res.json();
 }
 
+export async function sendContact(payload) {
+  try {
+    const res = await fetch(`${API_BASE}/contact/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.status === 429) {
+      return {
+        status: 'rateLimit',
+        message: 'Too many requests. Please wait a few minutes before trying again.',
+      };
+    }
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      return {
+        status: 'error',
+        message:
+          errorData.detail?.[0]?.msg ||
+          errorData.detail ||
+          'Failed to send. Please try again or email me directly at contact@joseberos.dev.',
+      };
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.warn('Contact delivery failed', err);
+    return {
+      status: 'error',
+      message: 'Failed to send. Please try again or email me directly at contact@joseberos.dev.',
+    };
+  }
+}
+

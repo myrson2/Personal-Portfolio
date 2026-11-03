@@ -97,8 +97,8 @@ export default function CertificationsCarousel() {
         </div>
 
         {/* Navigation Step Controls and Loop Status */}
-        <div className="carousel-controls">
-          <div className="carousel-step-btns">
+        <div className="carousel-controls d-flex justify-content-between align-items-center mt-2">
+          <div className="carousel-step-btns d-flex align-items-center gap-1">
             <button
               type="button"
               onClick={handlePrev}
@@ -107,6 +107,7 @@ export default function CertificationsCarousel() {
             >
               <ChevronLeft size={16} />
             </button>
+            <span className="carousel-counter small fw-bold px-2">{activeNumber}/{COUNT}</span>
             <button
               type="button"
               onClick={handleNext}
@@ -116,6 +117,10 @@ export default function CertificationsCarousel() {
               <ChevronRight size={16} />
             </button>
           </div>
+          <span className="badge rounded-0 bg-light text-dark border border-dark d-flex align-items-center gap-1 small">
+            <RefreshCw size={12} className={isPaused ? '' : 'spin-slow'} />
+            {isPaused ? 'Paused' : 'Looping'}
+          </span>
         </div>
       </div>
 

@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     # Cache settings (seconds)
     CACHE_TTL_SECONDS: int = Field(default=1800)
 
+    # Resend Email Delivery
+    RESEND_API_KEY: str = Field(default="")
+    RESEND_TO_EMAIL: str = Field(default="")
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

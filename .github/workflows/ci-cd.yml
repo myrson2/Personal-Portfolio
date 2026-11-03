@@ -76,6 +76,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install latest Vercel CLI
+        run: npm i -g vercel@latest
+
       - name: Deploy frontend to Vercel
         uses: amondnet/vercel-action@v25
         with:

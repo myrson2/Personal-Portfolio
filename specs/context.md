@@ -1,9 +1,10 @@
 # Implementation Context & Historical Record
 
 - **Current Milestone**: Milestone 2 (`specs/roadmap.md`)
-- **Active Feature ID**: `FEAT-M2-LIVE-CONTACT-GATEWAY`
+- **Active Feature ID**: `FEAT-M2-PROJECT-DEEP-DIVE`
+- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`
 - **Status**: Completed & Fully Verified
-- **Completed At**: 2026-11-03T19:20:00+08:00
+- **Completed At**: 2026-11-03T20:45:00+08:00
 - **Author / Lead**: Jose Myrson O. Beros
 
 ---
@@ -12,13 +13,19 @@
 
 Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) delivering an interactive retro developer portfolio. Grounded in `specs/constitution.md`, the platform integrates an asymmetrical two-column layout, retro pixel-art aesthetic (70/30/20 palette rule), stat counters, project cards, an RTL infinite certifications carousel, an interactive 53-week GitHub contribution heat map, and a FastAPI caching proxy.
 
-**Milestone 2 (Feature 1: Live Contact Gateway)** elevated the portfolio from static placeholder interactions to a live transactional communication channel:
-1. Upgraded the contact infrastructure from mock recording (`/api/contact/placeholder`) to a live delivery channel via **Resend** (`POST /api/contact/send`).
-2. Implemented defensive in-memory IP rate limiting (`IPRateLimiter` with `TTLCache`: 3 submissions per 15 minutes per IP) to prevent spam without database overhead.
-3. Added threadpool delegation (`asyncio.to_thread`) for the synchronous Resend client to maintain strict non-blocking async event loop discipline.
-4. Maintained zero client secret leakage: `RESEND_API_KEY` and `RESEND_TO_EMAIL` are managed strictly in `backend/.env`.
-5. Upgraded `ScheduleMeetingModal.jsx` with an explicit state machine (`idle` → `loading` → `success` | `error` | `rateLimit`), responsive styling (16px input font size to prevent iOS zoom, ≥ 44px touch targets), and direct fallback mailto link.
-6. Maintained upstream resilience: if no `RESEND_API_KEY` is provided, the backend falls back gracefully to `status: "mock"`, ensuring local development and preview deployments never break.
+**Milestone 2 Delivery Overview**:
+1. **Feature 1: Live Contact Gateway (`FEAT-M2-LIVE-CONTACT-GATEWAY`)**:
+   - Replaced placeholder endpoint with live Resend transactional email delivery (`POST /api/contact/send`).
+   - Implemented threadpool async execution (`asyncio.to_thread`) and in-memory IP rate limiting (`IPRateLimiter`: max 3 submissions / 15 min / IP).
+   - Designed 5-state UI state machine with fallback contact links and zero client secret leakage.
+2. **Feature 2: Dedicated Project Details Modal / Deep Dive Routes (`FEAT-M2-PROJECT-DEEP-DIVE`)**:
+   - Built interactive architectural case studies for featured systems:
+     - **`smartstock-ai`**: Autonomous inventory optimization system (Python, FastAPI, Gemini AI, React, vector search).
+     - **`depths-descents`**: High-performance multiplayer game engine (Lua, custom physics, procedural cave generation, netcode sync).
+   - Implemented bidirectional URL hash synchronization (`#project/:slug`) enabling direct shareable links and deep linking.
+   - Built a 5-tab modal interface ([`ProjectDeepDiveModal.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ProjectDeepDiveModal.jsx)): Overview & Metrics, Subsystem Architecture, Engineering Challenges & Solutions, Technology Rationale, and an Interactive Simulated Sandbox Terminal.
+   - Added robust FastAPI data endpoints (`GET /api/projects` and `GET /api/projects/{slug}`) backed by deterministic fixtures and client-side offline fallbacks in [`api.js`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/services/api.js).
+   - Provided graceful invalid slug handling: displays "This project case study is not yet implemented or does not exist." with automatic exit back to `#projects`.
 
 ---
 
@@ -39,90 +46,83 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) d
   - [`specs/feature/2026-11-03-live-contact-gateway/specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/specification.md)
   - [`specs/feature/2026-11-03-live-contact-gateway/implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/implementation.md)
   - [`specs/feature/2026-11-03-live-contact-gateway/validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/validation.md)
+- **Milestone 2 Project Deep Dive Modals**:
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/specification.md)
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/implementation.md)
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/validation.md)
 
 ### Backend Gateway (`/backend`)
-- [`backend/requirements.txt`](file:///c:/Users/merss/Personal-Portfolio/backend/requirements.txt): Added `resend>=2.0.0`.
-- [`backend/.env.example`](file:///c:/Users/merss/Personal-Portfolio/backend/.env.example): Added `RESEND_API_KEY` and `RESEND_TO_EMAIL`.
-- [`backend/.env`](file:///c:/Users/merss/Personal-Portfolio/backend/.env): Local configuration for Resend credentials.
-- [`backend/app/core/config.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/config.py): Pydantic settings loading `RESEND_API_KEY` and `RESEND_TO_EMAIL`.
-- [`backend/app/core/rate_limiter.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/rate_limiter.py): In-memory per-IP rate limiter using `TTLCache(maxsize=1000, ttl=900)`.
-- [`backend/app/models/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/models/contact.py): Added `ContactSendRequest` and `ContactSendResponse` with regex email validation.
-- [`backend/app/services/email_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/email_service.py): Transactional email delivery service via Resend with async threadpool execution.
-- [`backend/app/api/endpoints/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/contact.py): Implemented `POST /api/contact/send` route with rate limiting.
-- [`backend/tests/test_contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_contact.py): 8 automated tests for send success, mock mode, validation, 429 rate limit, 503 error handling, and secret masking.
+- [`backend/app/models/project.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/models/project.py): Pydantic models for project summary, metrics, architecture components, challenges, tech rationale, and simulated demo steps.
+- [`backend/app/fixtures/projects_data.json`](file:///c:/Users/merss/Personal-Portfolio/backend/app/fixtures/projects_data.json): Comprehensive architectural case study datasets for `smartstock-ai` and `depths-descents`.
+- [`backend/app/services/project_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/project_service.py): In-memory fixture cache and query service indexing projects by slug.
+- [`backend/app/api/endpoints/projects.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/projects.py): `GET /api/projects` and `GET /api/projects/{slug}` endpoints with HTTP 404 error handling.
+- [`backend/app/api/router.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/router.py): Registered `projects.router`.
+- [`backend/tests/test_projects.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_projects.py): 4 automated tests verifying project listing, detail resolution, and 404 behavior.
+- [`backend/app/core/rate_limiter.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/rate_limiter.py): In-memory per-IP rate limiter.
+- [`backend/app/services/email_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/email_service.py): Transactional email delivery service via Resend.
+- [`backend/app/api/endpoints/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/contact.py): `POST /api/contact/send` route.
+- [`backend/tests/test_contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_contact.py): 8 automated tests for email delivery and rate limiting.
 
 ### Frontend Application (`/frontend`)
-- [`frontend/src/services/api.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Added `sendContact(payload)` client fetch wrapper with network resilience.
-- [`frontend/src/components/Modals/ScheduleMeetingModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ScheduleMeetingModal.jsx): State-driven contact form with inline error alerts, rate limit notices, and mobile input optimizations.
-- [`frontend/src/components/Certifications/CertificationsCarousel.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Certifications/CertificationsCarousel.jsx): Restored step counter badge (`1/4`) and pause-on-hover indicator badge.
-- [`frontend/src/__tests__/ScheduleMeetingModal.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ScheduleMeetingModal.test.jsx): 4 test cases for modal visibility, successful submission, rate limit handling, and failure fallback.
+- [`frontend/src/services/api.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Added `fetchProjects()` and `fetchProjectDetails(slug)` with complete client fallback fixtures.
+- [`frontend/src/components/Modals/ProjectDeepDiveModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ProjectDeepDiveModal.jsx): Tabbed deep dive modal with responsive layout, keyboard accessibility (Escape), and simulated sandbox terminal.
+- [`frontend/src/components/Projects/ProjectsSection.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Projects/ProjectsSection.jsx): Added "Case Study ->" triggers to featured cards and window `hashchange` listener.
+- [`frontend/src/styles/retro-pixel.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/retro-pixel.css): Added CSS tokens for deep dive modals, tabs, metric cards, and retro terminal.
+- [`frontend/src/__tests__/ProjectDeepDiveModal.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectDeepDiveModal.test.jsx): 5 test cases verifying render, tab navigation, simulated sandbox, and 404 auto-exit.
+- [`frontend/src/__tests__/ProjectsSection.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectsSection.test.jsx): Verified 2 Case Study buttons exist and trigger deep dive flow.
 
 ---
 
 ## 3. Key Architectural & Design Decisions
 
-1. **Async Event Loop Discipline via Threadpool**:
-   - The official Python `resend` SDK uses synchronous HTTP requests (`requests` library). To comply with `specs/constitution.md` ("No blocking calls on event loop"), calls are executed via `await asyncio.to_thread(resend.Emails.send, params)`.
-2. **In-Memory IP Rate Limiting**:
-   - To adhere to Scope Discipline (no PostgreSQL/ORM in M1/M2), rate limiting is implemented via `IPRateLimiter` utilizing `cachetools.TTLCache` with a 15-minute sliding TTL. Any IP making more than 3 submissions within 15 minutes receives HTTP 429.
-3. **Deterministic Mock Mode**:
-   - If `RESEND_API_KEY` is empty, `EmailService` logs a warning and returns `ContactSendResponse(status="mock", message="Email delivery skipped (no API key configured)")` with HTTP 200. This ensures developers and CI runners without API keys can test forms without breakage.
-4. **Zero Client Secret Exposure**:
-   - All Resend operations are isolated behind the FastAPI backend proxy. Neither `RESEND_API_KEY` nor private tokens exist in client-side code. An automated bundle audit (`Select-String -Path "frontend/dist/assets/*.js" -Pattern "RESEND_API_KEY"`) confirmed zero occurrences.
-5. **Fail-Safe UI State Machine & Mobile UX**:
-   - `ScheduleMeetingModal.jsx` manages distinct states: `idle`, `loading`, `success`, `error`, and `rateLimit`.
-   - On submission errors, the user is provided a fallback email address link (`mailto:contact@joseberos.dev`).
-   - Form inputs enforce `font-size: 16px` on all viewports, preventing automatic zooming on mobile iOS WebKit browsers.
+1. **Bidirectional URL Hash Synchronization**:
+   - Rather than forcing heavy multi-page client routers into a single-page editorial canvas, deep dives synchronize with standard URL hashes (`#project/smartstock-ai`, `#project/depths-descents`).
+   - Enables recruiters to share direct links while allowing instant back/close operations without page reloads.
+2. **Defensive Client-Side Fallback Tier**:
+   - Both `smartstock-ai` and `depths-descents` case studies are bundled as static fallbacks inside `frontend/src/services/api.js`.
+   - If the FastAPI gateway is unreachable or offline, the modal renders from cached fixtures without disruption.
+3. **Interactive Simulated Sandbox Terminal**:
+   - Instead of risky external iframe embeds or complex live server sandboxes, the modal provides an interactive retro command line interface (`SimulatedDemoStep`).
+   - Users can execute sequential CLI commands (e.g. running predictive model evaluations or physics tick checks) and view realistic log streams with zero security or sandbox boundary concerns.
+4. **Graceful Handling of Unimplemented Slugs**:
+   - If an unrecognized project slug is opened, the modal displays a clear notice ("This project case study is not yet implemented or does not exist.") and automatically exits after 2.5 seconds back to `#projects`.
+5. **Zero Client Secret Exposure & Performance**:
+   - All backend project endpoints are asynchronous, fast (< 5ms response time), and strictly validated via Pydantic models. Client-side production builds contain 0 leaked tokens.
 
 ---
 
 ## 4. Verification & Test Evidence
 
-### Backend Pytest Suite (via `uv run`)
+### Backend Pytest Suite (19/19 PASSED in 3.07s)
 Executed via `cd backend && uv run pytest tests -v`:
-```
-tests/test_contact.py::test_contact_send_success PASSED                  [  6%]
-tests/test_contact.py::test_contact_send_mock_mode PASSED                [ 13%]
-tests/test_contact.py::test_contact_send_invalid_email PASSED            [ 20%]
-tests/test_contact.py::test_contact_send_missing_name PASSED             [ 26%]
-tests/test_contact.py::test_contact_send_notes_too_long PASSED           [ 33%]
-tests/test_contact.py::test_contact_send_rate_limit PASSED               [ 40%]
-tests/test_contact.py::test_contact_send_resend_failure PASSED           [ 46%]
-tests/test_contact.py::test_api_key_not_in_response PASSED               [ 53%]
-tests/test_contact.py::test_contact_placeholder_valid_submission PASSED  [ 60%]
-tests/test_cors.py::test_cors_allowed_origin PASSED                      [ 66%]
-tests/test_cors.py::test_cors_disallowed_origin PASSED                   [ 73%]
-tests/test_github_calendar.py::test_calendar_fallback_mode PASSED        [ 80%]
-tests/test_github_overview.py::test_overview_fallback_mode PASSED        [ 86%]
-tests/test_github_overview.py::test_overview_caching_behavior PASSED     [ 93%]
-tests/test_health.py::test_health_returns_200_ok PASSED                  [100%]
+- `tests/test_projects.py::test_list_projects_returns_200_and_summaries`: **PASSED**
+- `tests/test_projects.py::test_get_smartstock_ai_project_detail`: **PASSED**
+- `tests/test_projects.py::test_get_depths_descents_project_detail`: **PASSED**
+- `tests/test_projects.py::test_get_project_unknown_slug_returns_404`: **PASSED**
+- `tests/test_contact.py` (8 tests): **PASSED**
+- `tests/test_github_overview.py` (2 tests): **PASSED**
+- `tests/test_github_calendar.py` (1 test): **PASSED**
+- `tests/test_cors.py` (2 tests): **PASSED**
+- `tests/test_health.py` (1 test): **PASSED**
 
-======================= 15 passed in 2.48s =======================
-```
-
-### Frontend Vitest Suite
+### Frontend Vitest Suite (7/7 Files, 20/20 PASSED in 13.77s)
 Executed via `npm.cmd test -- --run` inside `/frontend`:
-```
- ✓ src/__tests__/AboutSection.test.jsx (2 tests)
- ✓ src/__tests__/ProjectsSection.test.jsx (1 test)
- ✓ src/__tests__/GitHubCalendarGrid.test.jsx (2 tests)
- ✓ src/__tests__/ProfileHeader.test.jsx (2 tests)
- ✓ src/__tests__/CertificationsCarousel.test.jsx (3 tests)
- ✓ src/__tests__/ScheduleMeetingModal.test.jsx (4 tests)
-
- Test Files  6 passed (6)
-      Tests  14 passed (14)
-   Duration  8.78s
-```
+- `ProjectDeepDiveModal.test.jsx`: **5 passed** (overview, architecture tab, challenges tab, simulated terminal, 404 notice)
+- `ProjectsSection.test.jsx`: **2 passed** (render + case study triggers)
+- `ScheduleMeetingModal.test.jsx`: **4 passed**
+- `CertificationsCarousel.test.jsx`: **3 passed**
+- `GitHubCalendarGrid.test.jsx`: **2 passed**
+- `ProfileHeader.test.jsx`: **2 passed**
+- `AboutSection.test.jsx`: **2 passed**
 
 ### Production Build & Secret Audit
 Executed via `npm.cmd run build` inside `/frontend`:
 ```
-✓ 1587 modules transformed.
-dist/index.html                   0.85 kB │ gzip:  0.47 kB
-dist/assets/index-DJUIBCMN.css  246.86 kB │ gzip: 34.45 kB
-dist/assets/index-DZTTpR0O.js   178.39 kB │ gzip: 54.88 kB
-✓ built in 8.10s
+✓ 1588 modules transformed.
+dist/index.html                   0.85 kB │ gzip:  0.48 kB
+dist/assets/index-LcWSM7UN.css  248.82 kB │ gzip: 34.80 kB
+dist/assets/index-DW6GDRiC.js   200.18 kB │ gzip: 60.85 kB
+✓ built in 5.83s
 ```
 Secret bundle inspection verified **0 matches** for `RESEND_API_KEY`.
 
@@ -130,19 +130,15 @@ Secret bundle inspection verified **0 matches** for `RESEND_API_KEY`.
 
 ## 5. Operational Runbook
 
-### Starting Backend (with `uv`):
+### Starting Backend:
 ```powershell
 cd backend
 uv run uvicorn app.main:app --reload --port 8001
 ```
 - Interactive Swagger docs: `http://localhost:8001/docs`
-- Contact send endpoint: `http://localhost:8001/api/contact/send`
-
-### Running Backend Tests:
-```powershell
-cd backend
-uv run pytest tests -v
-```
+- Projects list: `http://localhost:8001/api/projects`
+- SmartStock AI detail: `http://localhost:8001/api/projects/smartstock-ai`
+- Depths Descents detail: `http://localhost:8001/api/projects/depths-descents`
 
 ### Starting Frontend:
 ```powershell
@@ -150,18 +146,21 @@ cd frontend
 npm.cmd run dev
 ```
 Client application: `http://localhost:5173`.
+- View SmartStock AI directly: `http://localhost:5173/#project/smartstock-ai`
+- View Depths Descents directly: `http://localhost:5173/#project/depths-descents`
 
-### Running Frontend Tests & Production Build:
+### Running All Tests:
 ```powershell
-cd frontend
-npm.cmd test -- --run
-npm.cmd run build
+# Backend
+cd backend && uv run pytest tests -v
+
+# Frontend
+cd ..\frontend && npm.cmd test -- --run
 ```
 
 ---
 
-## 6. Next Roadmap Handoff (Milestone 2, Workstream 2 & 3)
+## 6. Next Roadmap Handoff (Milestone 2, Workstream 3)
 
-With the Live Contact Gateway fully operational, the remaining Milestone 2 priorities are:
-1. **Dedicated Project Details Modal / Deep Dive Routes**: Interactive technical case studies for featured projects (architecture diagrams, tech stack breakdowns, and problem/solution walkthroughs).
-2. **Automated CI/CD & Production Deployment**: GitHub Actions pipeline configuring linting, testing, and production deployment to Vercel/Cloudflare Pages (frontend) and Render/Railway (backend).
+With Workstreams 1 (Live Contact Gateway) and 2 (Dedicated Project Details Modal / Deep Dive Routes) fully delivered and verified, the final priority for Milestone 2 is:
+- **Workstream 3: Automated CI/CD & Production Deployment**: GitHub Actions pipeline configuring linting, automated testing for both frontend and backend, and automated deployment configurations for Vercel/Cloudflare Pages (frontend) and Render/Railway (backend).

@@ -112,3 +112,243 @@ export async function sendContact(payload) {
   }
 }
 
+const FALLBACK_PROJECTS = {
+  colorgame: {
+    slug: 'colorgame',
+    title: 'ColorGame',
+    tagline: 'Interactive, high-fidelity web simulation of the traditional carnival Color Betting Game with synchronized 3-reel animations and multi-color payout engine.',
+    category: 'Frontend & Game Simulation',
+    tags: ['React 19', 'Vite', 'JavaScript ES6+', 'CSS Glassmorphism'],
+    github_url: 'https://github.com/myrson2/ColorGame',
+    demo_url: null,
+    architecture_overview: "ColorGame is a modern, responsive web application recreating the vibrant Philippine carnival 'Perya Color Game'. Engineered with React 19 and Vite, it decouples the physics and timing of 3-reel color spin animations from a deterministic multi-color betting and payout calculation engine, wrapped in a polished dark glassmorphic design system.",
+    components: [
+      {
+        name: '3-Reel Animated Spin Mechanism',
+        description: 'State-synchronized visual reel spin system rendering 6 vibrant color tiles (Red, Yellow, Green, Blue, Purple, Pink) with CSS cubic-bezier transition curves.',
+        tech: 'React 19 / CSS Animations',
+      },
+      {
+        name: 'Dynamic Bet & Balance Allocator',
+        description: 'Manages configurable starting funds, dynamic bet increments, multi-color tile betting, and single-click bankroll resets.',
+        tech: 'React Hooks / State Engine',
+      },
+      {
+        name: 'Automated Multi-Color Payout Engine',
+        description: 'Calculates real-time multiplier payouts based on final reel match counts (1x match = 1:1, 2x = 2:1, 3x = 3:1).',
+        tech: 'Deterministic Math Engine',
+      },
+      {
+        name: 'Result Breakdown & Summary Modal',
+        description: 'Interactive dialog detailing color-by-color bet allocations, match multipliers, net gains/losses, and bankroll reconciliation.',
+        tech: 'Glassmorphism UI / Modals',
+      },
+    ],
+    challenges: [
+      {
+        challenge: 'Reel animation synchronization with instant state payout resolution without UI stutter.',
+        solution: 'Decoupled animation frame timing from state computation using promise-based spin delays, ensuring payouts evaluate only when the visual reels halt.',
+        impact: 'Delivered fluid 60 FPS spin animations across mobile and desktop devices without desynchronized result popups.',
+      },
+      {
+        challenge: 'Preventing state race conditions and invalid bankroll deductions during concurrent multi-color click placements.',
+        solution: 'Enforced functional state updates and bankroll guardrails that validate available funds before incrementing individual color bets.',
+        impact: 'Eliminated negative balance bugs and ensured accurate, reliable betting transactions.',
+      },
+    ],
+    tech_rationale: [
+      {
+        technology: 'React 19',
+        role: 'Reactive UI Framework',
+        rationale: 'Leverages the latest concurrent rendering features and state hooks for instant, sub-millisecond bet updates and reel transitions.',
+      },
+      {
+        technology: 'Vite',
+        role: 'Build Tool & Bundler',
+        rationale: 'Provides instant Hot Module Replacement (HMR) and optimized lightweight production bundles (< 45 kB).',
+      },
+      {
+        technology: 'Vanilla CSS Glassmorphism',
+        role: 'Design System',
+        rationale: 'Creates a tactile, modern carnival ambiance with frosted-glass backdrops, vibrant neon borders, and zero heavy UI library overhead.',
+      },
+    ],
+    metrics: [
+      {
+        label: 'Max Multiplier',
+        value: '3:1',
+        description: 'Top payout awarded when all 3 reels align on a single color.',
+      },
+      {
+        label: 'Simulated Colors',
+        value: '6 Colors',
+        description: 'Red, Yellow, Green, Blue, Purple, and Pink carnival palette.',
+      },
+      {
+        label: 'Animation Rate',
+        value: '60 FPS',
+        description: 'Smooth CSS-driven reel animations with cubic-bezier easing.',
+      },
+      {
+        label: 'Bundle Footprint',
+        value: '< 45 kB',
+        description: 'Ultra-lightweight production bundle compiled with Vite.',
+      },
+    ],
+    demo_instructions: 'Simulate placing multi-color bets, spinning the 3 reels, and calculating the net payout.',
+    simulated_steps: [
+      {
+        command: 'game.place_bets({ green: 100, red: 50, yellow: 50 })',
+        output: '[BETS_PLACED] Total allocated: 200 pts | Remaining bankroll: 800 pts | Tiles active: Green, Red, Yellow',
+      },
+      {
+        command: 'game.roll_reels()',
+        output: '[REEL_SPIN] Spinning 3 color wheels...\n[STOPPED] Reel 1: [Green] | Reel 2: [Green] | Reel 3: [Pink]\n[MATCHES] Green: 2x match | Red: 0x | Yellow: 0x | Pink: 1x (Unbet)',
+      },
+      {
+        command: 'game.claim_results()',
+        output: '[PAYOUT_BREAKDOWN]\n  • Green: 100 pts x 2:1 = +200 pts profit (return: 300 pts)\n  • Red: 50 pts lost\n  • Yellow: 50 pts lost\n[NET_CHANGE] +100 pts | Updated Bankroll: 1,100 pts',
+      },
+    ],
+  },
+  equiptrack: {
+    slug: 'equiptrack',
+    title: 'EquipTrack',
+    tagline: 'Industrial fleet asset management and rental operations platform with run-hour maintenance scheduling and automated billing engine.',
+    category: 'Fleet Systems & Operations',
+    tags: ['Python 3.10+', 'Layered OOP', 'CLI Architecture', 'JSON Persistence'],
+    github_url: 'https://github.com/myrson2/EquipTrack',
+    demo_url: null,
+    architecture_overview: 'EquipTrack (Apex Asset Operations Platform) is an internal fleet management, customer account tracking, and rental transaction platform for heavy machinery. Built with pure Python standard library modules, it enforces strict layered architecture (CLI -> Service Layer -> Repository Layer -> JSON Storage) with state transition locks, run-hour maintenance triggers, and billing calculations.',
+    components: [
+      {
+        name: 'Layered Application Architecture',
+        description: 'Enforces unidirectional control flow (CLI Navigation -> Services -> Repositories -> File Storage), guaranteeing separation of concerns.',
+        tech: 'Python 3.10+ / OOP',
+      },
+      {
+        name: 'Fleet Inventory & Equipment Models',
+        description: 'Implements BaseEquipment and PoweredEquipment class hierarchy tracking runtime metrics, fuel levels, and machine lifecycle states.',
+        tech: 'Domain Models / Inheritance',
+      },
+      {
+        name: 'Rental Operations & Checkout Desk',
+        description: 'Automates contract dispatch (CNTR-XXXX), returns, 1.5x late penalty calculations, and fuel surcharges ($5/gal + $50 fee).',
+        tech: 'Service Layer / Business Rules',
+      },
+      {
+        name: 'Service & Maintenance Operations',
+        description: 'Maintains equipment service logs, flags machines crossing run-hour maintenance thresholds, and tracks mechanic checkouts.',
+        tech: 'Maintenance Engine',
+      },
+    ],
+    challenges: [
+      {
+        challenge: 'Enforcing machine state integrity (AVAILABLE -> RENTED -> UNDER_MAINTENANCE) without an external relational database.',
+        solution: 'Implemented domain-level state machine validation locks in the service layer, preventing double-booking or dispatching uninspected units.',
+        impact: 'Achieved 100% contract state consistency across multi-step rental checkouts and returns.',
+      },
+      {
+        challenge: 'Persistent record keeping across terminal operator restarts with zero external dependencies.',
+        solution: 'Built a JSON repository layer using Python\'s standard library with atomic file writes and schema validation on startup.',
+        impact: 'Delivered zero-dependency deployment and robust data persistence across customer sessions and terminal restarts.',
+      },
+    ],
+    tech_rationale: [
+      {
+        technology: 'Python 3.10+',
+        role: 'Core Runtime & OOP Architecture',
+        rationale: 'Leverages type hints, dataclasses, and rich object-oriented modeling with standard library tools for maximum portability.',
+      },
+      {
+        technology: 'Layered Architecture',
+        role: 'System Organization',
+        rationale: 'Decouples the terminal user interface from business logic and data persistence, making future REST or GUI transitions seamless.',
+      },
+      {
+        technology: 'Zero External Dependencies',
+        role: 'Deployment Standard',
+        rationale: 'Runs out-of-the-box on any standard Python environment without requiring pip installations or third-party database services.',
+      },
+    ],
+    metrics: [
+      {
+        label: 'Platform Completion',
+        value: '80%',
+        description: 'Customer accounts, rental desk, service logs, and inventory fully implemented.',
+      },
+      {
+        label: 'Asset Classes',
+        value: '5 Types',
+        description: 'Generators, excavators, trenchers, dehumidifiers, and mobile lighting rigs.',
+      },
+      {
+        label: 'Billing Accuracy',
+        value: '100%',
+        description: 'Automated run-hour billing, late fees, and fuel surcharge computations.',
+      },
+      {
+        label: 'Dependencies',
+        value: '0 Third-Party',
+        description: 'Engineered purely using the Python standard library.',
+      },
+    ],
+    demo_instructions: 'Simulate customer equipment dispatch, rental return billing, and run-hour maintenance diagnostics.',
+    simulated_steps: [
+      {
+        command: "python main.py dispatch --customer 'CUST-104' --equipment 'EQ-GEN-02' --days 3",
+        output: "[DISPATCH_CONFIRMED] Contract #CNTR-8419 issued to Customer 'CUST-104'\n  • Asset: Industrial 50kW Diesel Generator\n  • Starting Run-Hours: 142.5 hrs | Fuel Level: 100%\n  • Machine Status: RENTED",
+      },
+      {
+        command: "python main.py return --contract 'CNTR-8419' --hours-used 18.0 --fuel-returned 75%",
+        output: "[RETURN_PROCESSED] Contract #CNTR-8419 closed\n  • Base Rental (3 days): $600.00\n  • Fuel Refill Surcharge: $37.50\n  • Total Invoice: $637.50 | Status: PAID\n  • Machine Run-Hours updated: 160.5 hrs",
+      },
+      {
+        command: "python main.py inspect-fleet --asset 'EQ-GEN-02'",
+        output: "[FLEET_STATUS] EQ-GEN-02: AVAILABLE | Run-hours: 160.5 / 200.0 (39.5 hrs until next oil/filter service)\n[HEALTH] All mechanical subsystems verified OK.",
+      },
+    ],
+  },
+};
+
+export async function fetchProjects() {
+  try {
+    const res = await fetch(`${API_BASE}/projects`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch projects: ${res.status}`);
+    }
+    return await res.json();
+  } catch (err) {
+    console.warn('Backend proxy unavailable, using client fallback for projects list', err);
+    return Object.values(FALLBACK_PROJECTS).map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      tagline: p.tagline,
+      category: p.category,
+      tags: p.tags,
+      github_url: p.github_url,
+      demo_url: p.demo_url,
+    }));
+  }
+}
+
+export async function fetchProjectDetails(slug) {
+  try {
+    const res = await fetch(`${API_BASE}/projects/${encodeURIComponent(slug)}`);
+    if (res.status === 404) {
+      return { status: 'not_found', message: 'Project not found' };
+    }
+    if (!res.ok) {
+      throw new Error(`Failed to fetch project details: ${res.status}`);
+    }
+    const data = await res.json();
+    return { status: 'success', data };
+  } catch (err) {
+    console.warn(`Backend proxy unavailable for project slug '${slug}', using client fallback`, err);
+    if (FALLBACK_PROJECTS[slug]) {
+      return { status: 'success', data: FALLBACK_PROJECTS[slug] };
+    }
+    return { status: 'not_found', message: 'Project not found' };
+  }
+}
+

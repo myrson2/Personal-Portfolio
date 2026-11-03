@@ -1,21 +1,24 @@
-import React from 'react';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Github, BookOpen } from 'lucide-react';
+import ProjectDeepDiveModal from '../Modals/ProjectDeepDiveModal';
 
 const FEATURED_PROJECTS = [
   {
     id: 1,
-    title: 'SmartStock AI',
-    description: 'Autonomous inventory optimization system leveraging predictive AI models to forecast supply volatility and reduce stockouts.',
-    tags: ['Python', 'FastAPI', 'React', 'Gemini AI'],
-    github: 'https://github.com/myrson2',
+    slug: 'colorgame',
+    title: 'ColorGame',
+    description: 'Interactive, high-fidelity web simulation of the carnival Color Betting Game featuring state-synchronized 3-reel animations and multi-color payout engine.',
+    tags: ['React 19', 'Vite', 'JavaScript ES6+', 'CSS Glassmorphism'],
+    github: 'https://github.com/myrson2/ColorGame',
     demo: '#',
   },
   {
     id: 2,
-    title: 'Depths Descents: Game Engine',
-    description: 'High-performance interactive game experience built with custom procedural generation, physics calculations, and netcode sync.',
-    tags: ['Lua', 'Roblox Studio', 'Physics Engine'],
-    github: 'https://github.com/myrson2',
+    slug: 'equiptrack',
+    title: 'EquipTrack',
+    description: 'Industrial fleet asset management platform with layered OOP architecture, run-hour maintenance triggers, and automated billing engine.',
+    tags: ['Python 3.10+', 'Layered OOP', 'CLI Architecture', 'JSON Persistence'],
+    github: 'https://github.com/myrson2/EquipTrack',
     demo: '#',
   },
 ];
@@ -36,6 +39,31 @@ const COMPACT_PROJECTS = [
 ];
 
 export default function ProjectsSection() {
+  const [activeModalSlug, setActiveModalSlug] = useState(null);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#project/')) {
+        const slug = hash.replace('#project/', '').trim();
+        if (slug) {
+          setActiveModalSlug(slug);
+        }
+      } else if (!hash || hash === '#projects') {
+        setActiveModalSlug(null);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const openCaseStudy = (slug) => {
+    window.location.hash = `#project/${slug}`;
+    setActiveModalSlug(slug);
+  };
+
   return (
     <section className="editorial-section" id="projects">
       <div className="editorial-label">Projects</div>
@@ -72,6 +100,17 @@ export default function ProjectsSection() {
                     </span>
                   ))}
                 </div>
+
+                <div className="mt-3 pt-2 border-top border-dark-subtle d-flex justify-content-between align-items-center">
+                  <button
+                    type="button"
+                    onClick={() => openCaseStudy(project.slug)}
+                    className="btn btn-sm btn-outline-dark rounded-0 font-monospace d-flex align-items-center gap-1"
+                    aria-label={`Open case study for ${project.title}`}
+                  >
+                    <BookOpen size={14} /> Case Study <ArrowRight size={12} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -99,7 +138,13 @@ export default function ProjectsSection() {
           </a>
         </div>
       </div>
+
+      {/* Interactive Case Study Modal */}
+      <ProjectDeepDiveModal
+        slug={activeModalSlug}
+        isOpen={Boolean(activeModalSlug)}
+        onClose={() => setActiveModalSlug(null)}
+      />
     </section>
   );
 }
-

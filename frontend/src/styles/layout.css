@@ -355,7 +355,7 @@ body {
 
 .featured-project-card {
   border: 1px solid var(--border-dark);
-  box-shadow: 3px 3px 0 var(--border-dark);
+  box-shadow: 2px 2px 0 var(--border-dark);
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -540,7 +540,7 @@ body {
 
 .cert-card:hover {
   transform: translateY(-2px);
-  box-shadow: 3px 3px 0 var(--border-dark);
+  box-shadow: 2px 2px 0 var(--border-dark);
   border-color: #111827;
 }
 

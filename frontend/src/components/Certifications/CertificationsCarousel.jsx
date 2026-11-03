@@ -63,7 +63,7 @@ export default function CertificationsCarousel() {
       return (
         <div
           key={`${prefix}-${cert.id}-${index}`}
-          className={`cert-card ${isLead ? 'active-lead' : ''}`}
+          className="cert-card"
         >
           <div className="d-flex justify-content-between align-items-center">
             <span className="cert-badge">{cert.category}</span>

@@ -151,8 +151,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(17, 24, 39, 0.55);
-  backdrop-filter: blur(2px);
+  background: rgba(17, 24, 39, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,9 +207,11 @@
   max-height: 88vh;
   overflow-y: auto;
   padding: 1.75rem;
-  background: var(--bg-light);
+  background: #ffffff;
   border: 2px solid var(--border-dark);
   box-shadow: 6px 6px 0 var(--border-dark);
+  position: relative;
+  z-index: 1051;
 }
 
 .deep-dive-header {
@@ -316,3 +319,8 @@
   margin-top: 0.75rem;
 }
 
+
+/* Ensure case study section has solid background */
+.case-study-section {
+  background-color: var(--bg-primary); /* solid white canvas */
+}

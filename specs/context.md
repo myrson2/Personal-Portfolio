@@ -163,4 +163,10 @@ cd ..\frontend && npm.cmd test -- --run
 ## 6. Next Roadmap Handoff (Milestone 2, Workstream 3)
 
 With Workstreams 1 (Live Contact Gateway) and 2 (Dedicated Project Details Modal / Deep Dive Routes) fully delivered and verified, the final priority for Milestone 2 is:
-- **Workstream 3: Automated CI/CD & Production Deployment**: GitHub Actions pipeline configuring linting, automated testing for both frontend and backend, and automated deployment configurations for Vercel/Cloudflare Pages (frontend) and Render/Railway (backend).
+- **Workstream 3: Automated CI/CD & Production Deployment** — Feature Specification Triad created: [`specs/feature/2026-11-03-cicd-deployment/`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/)
+  - [`specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/specification.md): 3 user stories, 11 functional requirements, acceptance criteria.
+  - [`implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/implementation.md): Full `.github/workflows/ci-cd.yml`, `backend/Dockerfile`, `render.yaml` IaC, secrets table, Mermaid sequence diagram.
+  - [`validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/validation.md): 10-test automated matrix, Constitution Compliance Matrix (9 rules ✅), 8-step manual QA runbook.
+  - **Deployment targets**: Frontend → Vercel, Backend → Render (free tier, Docker, health-check gated).
+  - **CI triggers**: `push` to `main` (CI + deploy), `pull_request` to `main` (CI only).
+  - **Secrets required**: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RENDER_DEPLOY_HOOK_URL`, `RESEND_API_KEY`, `GITHUB_USERNAME`, `CACHE_TTL`.

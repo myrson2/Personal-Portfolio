@@ -22,5 +22,11 @@ describe('ProjectsSection Component', () => {
     expect(allProjectsLink).toBeInTheDocument();
     expect(allProjectsLink).toHaveAttribute('href', 'https://github.com/myrson2?tab=repositories');
   });
+
+  it('renders Case Study buttons for featured projects', () => {
+    render(<ProjectsSection />);
+    const caseStudyBtns = screen.getAllByRole('button', { name: /case study/i });
+    expect(caseStudyBtns.length).toBe(2);
+  });
 });
 

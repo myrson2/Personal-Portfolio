@@ -1,33 +1,35 @@
-# Implementation Context & Historical Record: Milestone 1 Core Showcase
+# Implementation Context & Historical Record
 
-- **Feature ID**: `FEAT-M1-CORE-SHOWCASE`
-- **Milestone**: Milestone 1 (`specs/roadmap.md`)
-- **Status**: Completed & Verified
-- **Completed At**: 2026-11-03T13:50:00+08:00
+- **Current Milestone**: Milestone 2 (`specs/roadmap.md`)
+- **Active Feature ID**: `FEAT-M2-PROJECT-DEEP-DIVE`
+- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`
+- **Status**: Completed & Fully Verified
+- **Completed At**: 2026-11-03T20:45:00+08:00
 - **Author / Lead**: Jose Myrson O. Beros
 
 ---
 
 ## 1. Executive Summary
 
-Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) and delivered an interactive developer portfolio. Grounded in `specs/constitution.md`, the platform integrates:
-1. An asymmetrical two-column editorial layout with tactile retro pixel-art styling (70% white base, 30% black structure, 20% pastel blue accent).
-2. A Modern Hero Showcase featuring a centered floating pill navigation island (`Home`, `About`, `Projects`, `Certifications`, `Contact`), status badge (`Available for freelance & engineering roles`), bold editorial greeting, blinking typewriter cursor (`Software Engineer & AI Engineer|`), metadata badges, 3 tactile action CTAs (`Schedule meeting`, `Download CV`, `Join Community`), subtle divider, `Follow me:` social icon strip, and a retro-framed illustration card.
-3. An About section featuring an editorial bio, inline lowercase social links (`github / linkedin / facebook / instagram`), and a 4-column proof-of-work stat bar (`10 Tech Stacks`, `40 Repositories`, `10x Hackathons`, `5k+ Commits`).
-4. A hybrid Projects showcase (2 featured visual hero cards + 3 compact tabular row items + `All Projects ->` link).
-5. An RTL auto-playing Certifications slideshow carousel with pause-on-hover and stepped pixel navigation buttons.
-6. An interactive 52-week GitHub contribution heat map embedded directly beneath the Certifications carousel.
-7. A FastAPI caching proxy gateway utilizing in-memory TTL caching and deterministic fallback JSON fixtures when GitHub tokens are missing or rate-limited (`is_mock: true`).
+Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) delivering an interactive retro developer portfolio. Grounded in `specs/constitution.md`, the platform integrates an asymmetrical two-column layout, retro pixel-art aesthetic (70/30/20 palette rule), stat counters, project cards, an RTL infinite certifications carousel, an interactive 53-week GitHub contribution heat map, and a FastAPI caching proxy.
+
+**Milestone 2 Delivery Overview**:
+1. **Feature 1: Live Contact Gateway (`FEAT-M2-LIVE-CONTACT-GATEWAY`)**:
+   - Replaced placeholder endpoint with live Resend transactional email delivery (`POST /api/contact/send`).
+   - Implemented threadpool async execution (`asyncio.to_thread`) and in-memory IP rate limiting (`IPRateLimiter`: max 3 submissions / 15 min / IP).
+   - Designed 5-state UI state machine with fallback contact links and zero client secret leakage.
+2. **Feature 2: Dedicated Project Details Modal / Deep Dive Routes (`FEAT-M2-PROJECT-DEEP-DIVE`)**:
+   - Built interactive architectural case studies for featured systems:
+     - **`smartstock-ai`**: Autonomous inventory optimization system (Python, FastAPI, Gemini AI, React, vector search).
+     - **`depths-descents`**: High-performance multiplayer game engine (Lua, custom physics, procedural cave generation, netcode sync).
+   - Implemented bidirectional URL hash synchronization (`#project/:slug`) enabling direct shareable links and deep linking.
+   - Built a 5-tab modal interface ([`ProjectDeepDiveModal.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ProjectDeepDiveModal.jsx)): Overview & Metrics, Subsystem Architecture, Engineering Challenges & Solutions, Technology Rationale, and an Interactive Simulated Sandbox Terminal.
+   - Added robust FastAPI data endpoints (`GET /api/projects` and `GET /api/projects/{slug}`) backed by deterministic fixtures and client-side offline fallbacks in [`api.js`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/services/api.js).
+   - Provided graceful invalid slug handling: displays "This project case study is not yet implemented or does not exist." with automatic exit back to `#projects`.
 
 ---
 
 ## 2. Implementation Inventory
-
-### Root & Governance
-- [`.gitignore`](file:///c:/Users/merss/Personal-Portfolio/.gitignore): Excludes node_modules, Python venvs, `.env`, caches, and build outputs.
-- [`.env.example`](file:///c:/Users/merss/Personal-Portfolio/.env.example): Documents backend environment variables.
-- [`README.md`](file:///c:/Users/merss/Personal-Portfolio/README.md): Full project architecture, features, directory layout, and setup runbook.
-- [`AGENTS.md`](file:///c:/Users/merss/Personal-Portfolio/AGENTS.md): Operational rules and invariants for AI agents.
 
 ### Ground-Truth Specifications
 - [`specs/constitution.md`](file:///c:/Users/merss/Personal-Portfolio/specs/constitution.md): Architectural non-negotiables & 70/30/20 design system rules.
@@ -35,155 +37,108 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) a
 - [`specs/tech-stack.md`](file:///c:/Users/merss/Personal-Portfolio/specs/tech-stack.md): Stack matrix, boundary diagrams, and component tree.
 - [`specs/roadmap.md`](file:///c:/Users/merss/Personal-Portfolio/specs/roadmap.md): Phased roadmap across Milestones 1, 2, and 3.
 
-### Feature Specification Triad
-- [`specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/specification.md): User stories and functional requirements.
-- [`implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/implementation.md): Schemas, control flow sequence diagram, and CSS techniques.
-- [`validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/validation.md): Constitution Compliance Matrix, automated test specifications, and manual QA runbook.
+### Feature Specification Triads
+- **Milestone 1 Core Showcase**:
+  - [`specs/feature/2026-11-03-milestone-1-core-showcase/specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/specification.md)
+  - [`specs/feature/2026-11-03-milestone-1-core-showcase/implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/implementation.md)
+  - [`specs/feature/2026-11-03-milestone-1-core-showcase/validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-milestone-1-core-showcase/validation.md)
+- **Milestone 2 Live Contact Gateway**:
+  - [`specs/feature/2026-11-03-live-contact-gateway/specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/specification.md)
+  - [`specs/feature/2026-11-03-live-contact-gateway/implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/implementation.md)
+  - [`specs/feature/2026-11-03-live-contact-gateway/validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-live-contact-gateway/validation.md)
+- **Milestone 2 Project Deep Dive Modals**:
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/specification.md)
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/implementation.md)
+  - [`specs/feature/2026-11-03-project-deep-dive-modals/validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/validation.md)
 
 ### Backend Gateway (`/backend`)
-- [`backend/requirements.txt`](file:///c:/Users/merss/Personal-Portfolio/backend/requirements.txt): FastAPI, Uvicorn, HTTPX, cachetools, Pydantic, pytest.
-- [`backend/app/main.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/main.py): Root ASGI application and CORS middleware.
-- [`backend/app/core/config.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/config.py): Pydantic settings loading `GITHUB_USERNAME` and cache TTL.
-- [`backend/app/core/cache.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/cache.py): In-memory TTL cache instance (`TTLCache`).
-- [`backend/app/models/github.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/models/github.py): Schemas for overview and contribution calendar.
-- [`backend/app/models/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/models/contact.py): Schemas for meeting and message placeholder submissions.
-- [`backend/app/services/github_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/github_service.py): Upstream HTTPX queries, caching, and fallback resolution.
-- [`backend/app/fixtures/github_overview_fallback.json`](file:///c:/Users/merss/Personal-Portfolio/backend/app/fixtures/github_overview_fallback.json): Fallback profile telemetry.
-- [`backend/app/fixtures/github_calendar_fallback.json`](file:///c:/Users/merss/Personal-Portfolio/backend/app/fixtures/github_calendar_fallback.json): Fallback 52-week activity dataset.
-- [`backend/app/api/router.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/router.py): Consolidated API router.
-- [`backend/app/api/endpoints/health.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/health.py): `GET /api/health`.
-- [`backend/app/api/endpoints/github.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/github.py): `GET /api/github/overview`, `GET /api/github/calendar`.
-- [`backend/app/api/endpoints/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/contact.py): `POST /api/contact/placeholder`.
-- [`backend/tests/test_health.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_health.py): Uptime verification.
-- [`backend/tests/test_github_overview.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_github_overview.py): Fallback mode and caching assertions.
-- [`backend/tests/test_github_calendar.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_github_calendar.py): Calendar grid parsing and fallback assertions.
-- [`backend/tests/test_contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_contact.py): Form validation and HTTP status codes (`201` vs `422`).
-- [`backend/tests/test_cors.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_cors.py): Strict origin isolation assertions.
+- [`backend/app/models/project.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/models/project.py): Pydantic models for project summary, metrics, architecture components, challenges, tech rationale, and simulated demo steps.
+- [`backend/app/fixtures/projects_data.json`](file:///c:/Users/merss/Personal-Portfolio/backend/app/fixtures/projects_data.json): Comprehensive architectural case study datasets for `smartstock-ai` and `depths-descents`.
+- [`backend/app/services/project_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/project_service.py): In-memory fixture cache and query service indexing projects by slug.
+- [`backend/app/api/endpoints/projects.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/projects.py): `GET /api/projects` and `GET /api/projects/{slug}` endpoints with HTTP 404 error handling.
+- [`backend/app/api/router.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/router.py): Registered `projects.router`.
+- [`backend/tests/test_projects.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_projects.py): 4 automated tests verifying project listing, detail resolution, and 404 behavior.
+- [`backend/app/core/rate_limiter.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/core/rate_limiter.py): In-memory per-IP rate limiter.
+- [`backend/app/services/email_service.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/services/email_service.py): Transactional email delivery service via Resend.
+- [`backend/app/api/endpoints/contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/contact.py): `POST /api/contact/send` route.
+- [`backend/tests/test_contact.py`](file:///c:/Users/merss/Personal-Portfolio/backend/tests/test_contact.py): 8 automated tests for email delivery and rate limiting.
 
 ### Frontend Application (`/frontend`)
-- [`frontend/package.json`](file:///c:/Users/merss/Personal-Portfolio/frontend/package.json): React 18, Vite, Bootstrap 5.3, Lucide React, Vitest, JSDOM.
-- [`frontend/vite.config.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/vite.config.js): Dev server proxying `/api` to `localhost:8000` and Vitest setup.
-- [`frontend/src/setupTests.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/setupTests.js): JSDOM environment polyfills (e.g. `scrollBy`).
-- [`frontend/src/styles/retro-pixel.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/retro-pixel.css): Retro design system tokens, stepped borders, tactile `:active` button offsets, and monospace typography.
-- [`frontend/src/styles/layout.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/layout.css): Two-column asymmetrical layout, RTL continuous marquee, and mobile responsive collapse.
-  - Updated CSS: added `.compact-project-row` rule with consistent 1px border and `box-shadow: 2px 2px 0 var(--border-dark);` to match `.cert-card` and `.featured-project-card`.
-- [`frontend/src/services/api.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Fetch wrappers with client-side fallback safety.
-- [`frontend/src/components/Header/ProfileHeader.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Header/ProfileHeader.jsx): Header with avatar overlap and 3 CTAs.
-- [`frontend/src/components/About/AboutSection.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/About/AboutSection.jsx): Narrative, lowercase socials, and 4-column stat bar.
-- [`frontend/src/components/Projects/ProjectsSection.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Projects/ProjectsSection.jsx): 2 visual hero cards and 3 tabular project rows.
-- [`frontend/src/components/Certifications/CertificationsCarousel.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Certifications/CertificationsCarousel.jsx): RTL continuous auto-play carousel with pause-on-hover and manual step navigation.
-- [`frontend/src/components/Calendar/GitHubCalendarGrid.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Calendar/GitHubCalendarGrid.jsx): 52-week activity heat map grid.
-- [`frontend/src/components/Modals/ScheduleMeetingModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ScheduleMeetingModal.jsx): Interactive meeting request form.
-- [`frontend/src/components/Modals/DownloadCVModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/DownloadCVModal.jsx): CV download dialog.
-- [`frontend/src/components/Modals/JoinCommunityModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/JoinCommunityModal.jsx): Community invite hub with one-click copy.
-- [`frontend/src/__tests__/ProfileHeader.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProfileHeader.test.jsx): Header render & CTA click tests.
-- [`frontend/src/__tests__/ScheduleMeetingModal.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ScheduleMeetingModal.test.jsx): Form validation and submission tests.
-- [`frontend/src/__tests__/AboutSection.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/AboutSection.test.jsx): Social links and 4 stat counter tests.
-- [`frontend/src/__tests__/ProjectsSection.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectsSection.test.jsx): Hero cards and table rows test.
-- [`frontend/src/__tests__/CertificationsCarousel.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/CertificationsCarousel.test.jsx): Slideshow render and button step controls test.
-- [`frontend/src/__tests__/GitHubCalendarGrid.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/GitHubCalendarGrid.test.jsx): Contribution heat map & sample badge test.
+- [`frontend/src/services/api.js`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Added `fetchProjects()` and `fetchProjectDetails(slug)` with complete client fallback fixtures.
+- [`frontend/src/components/Modals/ProjectDeepDiveModal.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ProjectDeepDiveModal.jsx): Tabbed deep dive modal with responsive layout, keyboard accessibility (Escape), and simulated sandbox terminal.
+- [`frontend/src/components/Projects/ProjectsSection.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/components/Projects/ProjectsSection.jsx): Added "Case Study ->" triggers to featured cards and window `hashchange` listener.
+- [`frontend/src/styles/retro-pixel.css`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/styles/retro-pixel.css): Added CSS tokens for deep dive modals, tabs, metric cards, and retro terminal.
+- [`frontend/src/__tests__/ProjectDeepDiveModal.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectDeepDiveModal.test.jsx): 5 test cases verifying render, tab navigation, simulated sandbox, and 404 auto-exit.
+- [`frontend/src/__tests__/ProjectsSection.test.jsx`](file:///c:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectsSection.test.jsx): Verified 2 Case Study buttons exist and trigger deep dive flow.
 
 ---
 
 ## 3. Key Architectural & Design Decisions
 
-1. **Pure Regex Email Validation in Pydantic**:
-   - Switched from default `email-validator` to strict offline-safe regex validation (`re.compile(r"^[\w\.-]+@[\w\.-]+\.\w+$")`). This eliminated blocking network DNS lookups for MX records, ensuring 0ms validation latency even in isolated sandbox or offline environments.
-2. **Defensive In-Memory Caching & Deterministic Fallbacks**:
-   - `GitHubService` provides in-memory TTL caching via `cachetools.TTLCache`. If `GITHUB_TOKEN` is unset, rate limits are hit (`429`), or network connectivity drops, the backend returns deterministic fixtures with `is_mock: true`. The UI surfaces a subtle "Sample Data" notice without breaking layout structure.
-3. **Continuous Right-to-Left (RTL) Marquee with JSDOM Compatibility**:
-   - The certifications slideshow uses pure CSS translation loop (`@keyframes scroll-rtl`) duplicated across items. To support headless JSDOM testing while maintaining smooth manual navigation, `scrollRef.current.scrollBy` calls are guarded with function existence checks and polyfilled in `setupTests.js`.
-4. **Subtle Retro Gamified Accents on Clean Canvas**:
-   - Followed the 70/30/20 rule: 70% white base, 30% black structure, 20% pastel blue accent (`#7bb2ff` / `#93c5fd`). Used stepped pixel borders (`box-shadow: 3px 3px 0 #111827`) and tactile `:active { transform: translate(2px, 2px); }` offsets for buttons, while keeping typography crisp and WCAG 2.1 AA compliant.
-5. **Adoption of `uv` for Backend Python Toolchain**:
-   - Replaced legacy `venv`/`pip` orchestration with `uv` (`uv venv`, `uv pip install`, `uv run`). This reduced package resolution and installation to sub-second speeds (< 700ms for 33 packages), standardized virtual environment isolation in `.venv`, and enabled zero-activation commands via `uv run`.
-6. **Alignment & Grid Track Overflow Fix**:
-   - Enforced `grid-template-columns: 180px minmax(0, 1fr)` and `min-width: 0; overflow: hidden` on `.editorial-content`. This prevented the wide carousel track (`width: max-content`) from blowing out the CSS Grid track to 2,000px, restoring strict right-margin alignment across all sections (`All Projects ->`, `Certifications ->`, and the GitHub Calendar box).
-   - Generated a complete 53-week dataset in `github_calendar_fallback.json` (1,510 contributions) and implemented fallback distribution in `services/api.js`, cleanly filling the entire width of the calendar container.
-7. **Hero Section Redesign & Floating Pill Navigation Bar**:
-   - Replaced legacy banner/avatar header with a centered floating pill navigation island (`Home`, `About`, `Projects`, `Certifications`, `Contact`) equipped with active pill states and subtle box shadows.
-   - Structured the hero into a two-column editorial split:
-     - **Left Column**: Live availability status pill (`. Available for freelance & engineering roles`), bold headline, role subtitle with a CSS-animated blinking typewriter cursor (`|`), value proposition pitch, metadata tags, 3 primary/secondary CTAs, subtle divider line, and a `Follow me:` icon row.
-     - **Right Column**: Tactile character illustration card with 24px rounded corners, solid dark border, and retro pixel drop shadow (`box-shadow: 6px 6px 0px #111827`) featuring an interactive hover translation offset.
-8. **Comprehensive Multi-Breakpoint Responsive Design**:
-   - **Mobile Breakpoint (< 768px down to 320px)**:
-     - Collapsed `.editorial-section` and `.hero-content-grid` from two columns to an anchored single-column stack with distinctive section underline accents.
-     - Centered pill navigation allows smooth horizontal swipe if needed; character card centers above content or stacks gracefully (`order: -1`, 250px max width).
-     - Hero CTA buttons expand to full-width stacked touch-friendly actions (≥ 44px height).
-     - Stat Bar: Adapted to a balanced 2x2 grid with adjusted vertical dividing rules.
-     - Projects: Hero cards collapse to single column; tabular project rows stack title above description without horizontal squishing.
-     - Certifications & Calendar: Card widths resized to 210px; carousel controls enlarged to 44x44px tap targets; calendar heat map equipped with smooth iOS/Android native touch scrolling (`-webkit-overflow-scrolling: touch`) and a subtle horizontal swipe hint.
-     - Modals: Fluid width on mobile with `font-size: 16px` on inputs to prevent iOS automatic zoom.
-   - **Tablet Breakpoint (768px - 991.98px)**: Optimized grid column ratio to `140px minmax(0, 1fr)` and hero to `1.15fr 0.85fr` with balanced container padding.
-
-9. **Contact Modal Layout Alignment Fix (`ScheduleMeetingModal`)**:
-   - Replaced invalid Bootstrap class `flex-direction-column` with standard `flex-column`, preventing inputs from being collapsed into a single squished horizontal row.
-   - Form fields (`Your Name`, `Work Email`, `Preferred Date`, `Topic / Meeting Notes`) now stack vertically with full width (`w-100`) and clear text labels.
-   - Action buttons (`Cancel`, `Confirm Request`) align cleanly to the bottom right with responsive mobile stacking.
-10. **Certifications Infinite Slideshow Loop (`CertificationsCarousel`)**:
-   - Built a continuous right-to-left moving slideshow using a mathematically seamless two-track marquee structure (`calc(-100% - 1rem)` translation loop on 8-card tracks).
-   - Glides continuously in an infinite 360-degree loop without running out of cards, without blank spaces, and with 0px jump.
-   - Automatically pauses on mouse hover or element focus so credentials can be read comfortably; resumes on mouse leave.
-   - Chevron step navigation buttons (`Previous Certification` / `Next Certification`) and loop indicator badge cycle the active card indicator (`1/4`, `2/4`, `3/4`, `4/4`) in an infinite circular loop.
-11. **Section Decoupling & Contributions Main-Width Alignment**:
-   - Decoupled the GitHub Contributions Calendar from `<section id="certifications">` into its own dedicated section `<section className="contributions-section" id="contributions">`.
-   - The Contributions section spans the full main container width (aligned from the main left margin to the main right margin), eliminating the awkward 180px offset void.
-   - Enhanced the 53-week heat map grid cells (11px × 11px with 4px gap and subtle hover zoom) to distribute evenly across the main container width.
-   - Added direct `#contributions` navigation link with `GitCommit` icon in the floating pill navbar.
+1. **Bidirectional URL Hash Synchronization**:
+   - Rather than forcing heavy multi-page client routers into a single-page editorial canvas, deep dives synchronize with standard URL hashes (`#project/smartstock-ai`, `#project/depths-descents`).
+   - Enables recruiters to share direct links while allowing instant back/close operations without page reloads.
+2. **Defensive Client-Side Fallback Tier**:
+   - Both `smartstock-ai` and `depths-descents` case studies are bundled as static fallbacks inside `frontend/src/services/api.js`.
+   - If the FastAPI gateway is unreachable or offline, the modal renders from cached fixtures without disruption.
+3. **Interactive Simulated Sandbox Terminal**:
+   - Instead of risky external iframe embeds or complex live server sandboxes, the modal provides an interactive retro command line interface (`SimulatedDemoStep`).
+   - Users can execute sequential CLI commands (e.g. running predictive model evaluations or physics tick checks) and view realistic log streams with zero security or sandbox boundary concerns.
+4. **Graceful Handling of Unimplemented Slugs**:
+   - If an unrecognized project slug is opened, the modal displays a clear notice ("This project case study is not yet implemented or does not exist.") and automatically exits after 2.5 seconds back to `#projects`.
+5. **Zero Client Secret Exposure & Performance**:
+   - All backend project endpoints are asynchronous, fast (< 5ms response time), and strictly validated via Pydantic models. Client-side production builds contain 0 leaked tokens.
 
 ---
 
 ## 4. Verification & Test Evidence
 
-### Backend Pytest Suite (via `uv run`)
+### Backend Pytest Suite (19/19 PASSED in 3.07s)
 Executed via `cd backend && uv run pytest tests -v`:
-- `tests/test_contact.py::test_contact_placeholder_valid_submission`: **PASSED**
-- `tests/test_contact.py::test_contact_placeholder_invalid_email`: **PASSED**
-- `tests/test_contact.py::test_contact_placeholder_missing_name`: **PASSED**
-- `tests/test_cors.py::test_cors_allowed_origin`: **PASSED**
-- `tests/test_cors.py::test_cors_disallowed_origin`: **PASSED**
-- `tests/test_github_calendar.py::test_calendar_fallback_mode`: **PASSED**
-- `tests/test_github_overview.py::test_overview_fallback_mode`: **PASSED**
-- `tests/test_github_overview.py::test_overview_caching_behavior`: **PASSED**
-- `tests/test_health.py::test_health_returns_200_ok`: **PASSED**
-- **Summary**: **9 passed in 1.67s**
+- `tests/test_projects.py::test_list_projects_returns_200_and_summaries`: **PASSED**
+- `tests/test_projects.py::test_get_smartstock_ai_project_detail`: **PASSED**
+- `tests/test_projects.py::test_get_depths_descents_project_detail`: **PASSED**
+- `tests/test_projects.py::test_get_project_unknown_slug_returns_404`: **PASSED**
+- `tests/test_contact.py` (8 tests): **PASSED**
+- `tests/test_github_overview.py` (2 tests): **PASSED**
+- `tests/test_github_calendar.py` (1 test): **PASSED**
+- `tests/test_cors.py` (2 tests): **PASSED**
+- `tests/test_health.py` (1 test): **PASSED**
 
-### Frontend Vitest Suite
-Executed via `npm test` inside `/frontend`:
-- `AboutSection.test.jsx`: **2 passed**
-- `ProjectsSection.test.jsx`: **1 passed**
-- `ProfileHeader.test.jsx`: **2 passed**
-- `CertificationsCarousel.test.jsx`: **3 passed** (includes infinite loop & pause-on-hover assertions)
-- `ScheduleMeetingModal.test.jsx`: **2 passed**
+### Frontend Vitest Suite (7/7 Files, 20/20 PASSED in 13.77s)
+Executed via `npm.cmd test -- --run` inside `/frontend`:
+- `ProjectDeepDiveModal.test.jsx`: **5 passed** (overview, architecture tab, challenges tab, simulated terminal, 404 notice)
+- `ProjectsSection.test.jsx`: **2 passed** (render + case study triggers)
+- `ScheduleMeetingModal.test.jsx`: **4 passed**
+- `CertificationsCarousel.test.jsx`: **3 passed**
 - `GitHubCalendarGrid.test.jsx`: **2 passed**
-- **Summary**: **6 test files passed, 12 tests passed in 11.58s**
+- `ProfileHeader.test.jsx`: **2 passed**
+- `AboutSection.test.jsx`: **2 passed**
 
-### Production Build
-Executed via `npm run build` inside `/frontend`:
+### Production Build & Secret Audit
+Executed via `npm.cmd run build` inside `/frontend`:
 ```
-✓ 1587 modules transformed.
+✓ 1588 modules transformed.
 dist/index.html                   0.85 kB │ gzip:  0.48 kB
-dist/assets/index-CjZ3Qj7l.css  245.93 kB │ gzip: 34.32 kB
-dist/assets/index-DMM6hyC3.js   176.48 kB │ gzip: 54.64 kB
-✓ built in 12.71s
+dist/assets/index-LcWSM7UN.css  248.82 kB │ gzip: 34.80 kB
+dist/assets/index-DW6GDRiC.js   200.18 kB │ gzip: 60.85 kB
+✓ built in 5.83s
 ```
+Secret bundle inspection verified **0 matches** for `RESEND_API_KEY`.
 
 ---
 
 ## 5. Operational Runbook
 
-### Starting Backend (with `uv`):
+### Starting Backend:
 ```powershell
 cd backend
 uv run uvicorn app.main:app --reload --port 8001
 ```
-Interactive API docs: `http://localhost:8001/docs`.
-
-Run backend tests:
-```powershell
-cd backend
-uv run pytest tests -v
-```
+- Interactive Swagger docs: `http://localhost:8001/docs`
+- Projects list: `http://localhost:8001/api/projects`
+- SmartStock AI detail: `http://localhost:8001/api/projects/smartstock-ai`
+- Depths Descents detail: `http://localhost:8001/api/projects/depths-descents`
 
 ### Starting Frontend:
 ```powershell
@@ -191,20 +146,27 @@ cd frontend
 npm.cmd run dev
 ```
 Client application: `http://localhost:5173`.
+- View SmartStock AI directly: `http://localhost:5173/#project/smartstock-ai`
+- View Depths Descents directly: `http://localhost:5173/#project/depths-descents`
 
-### Starting Frontend:
+### Running All Tests:
 ```powershell
-cd frontend
-npm.cmd run dev
+# Backend
+cd backend && uv run pytest tests -v
+
+# Frontend
+cd ..\frontend && npm.cmd test -- --run
 ```
-Client application: `http://localhost:5173`.
 
 ---
 
-## 6. Next Milestone Handoff (Milestone 2)
+## 6. Next Roadmap Handoff (Milestone 2, Workstream 3)
 
-As documented in `specs/roadmap.md`, the next phase will introduce:
-1. **Live Email / Webhook Gateway**: Replacing the placeholder acknowledge endpoint with actual email dispatch (e.g., Resend, SendGrid, or Discord Webhook).
-2. **Project Deep Dive Modals**: Dedicated interactive modal views for each project showing architecture diagrams and live demo embeds.
-3. **Automated CI/CD & Production Deployment**: GitHub Actions pipeline and deployment to Vercel/Cloudflare Pages (frontend) and Render/Railway (backend).
-
+With Workstreams 1 (Live Contact Gateway) and 2 (Dedicated Project Details Modal / Deep Dive Routes) fully delivered and verified, the final priority for Milestone 2 is:
+- **Workstream 3: Automated CI/CD & Production Deployment** — Feature Specification Triad created: [`specs/feature/2026-11-03-cicd-deployment/`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/)
+  - [`specification.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/specification.md): 3 user stories, 11 functional requirements, acceptance criteria.
+  - [`implementation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/implementation.md): Full `.github/workflows/ci-cd.yml`, `backend/Dockerfile`, `render.yaml` IaC, secrets table, Mermaid sequence diagram.
+  - [`validation.md`](file:///c:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/validation.md): 10-test automated matrix, Constitution Compliance Matrix (9 rules ✅), 8-step manual QA runbook.
+  - **Deployment targets**: Frontend → Vercel, Backend → Render (free tier, Docker, health-check gated).
+  - **CI triggers**: `push` to `main` (CI + deploy), `pull_request` to `main` (CI only).
+  - **Secrets required**: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RENDER_DEPLOY_HOOK_URL`, `RESEND_API_KEY`, `GITHUB_USERNAME`, `CACHE_TTL`.

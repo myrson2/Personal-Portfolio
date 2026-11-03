@@ -87,23 +87,39 @@ Personal-Portfolio/
 ### Prerequisites
 - **Node.js**: v18.x or later
 - **Python**: v3.10 or later
+- **uv**: v0.12+ (Recommended) or standard pip
 - **pnpm / npm**
 
-### 1. Backend Setup (FastAPI)
+### 1. Backend Setup (FastAPI with `uv`)
+```bash
+cd backend
+
+# Using uv (Fastest & Recommended):
+uv venv
+uv pip install -r requirements.txt
+uv run uvicorn app.main:app --reload --port 8001
+
+# Execute backend tests:
+uv run pytest tests -v
+```
+
+<details>
+<summary>Alternative: Setup with standard Python venv & pip</summary>
+
 ```bash
 cd backend
 python -m venv venv
-
 # Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
 # macOS/Linux:
 # source venv/bin/activate
 
 pip install -r requirements.txt
-cp .env.example .env
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 8001
 ```
-FastAPI interactive Swagger docs will be available at [http://localhost:8000/docs](http://localhost:8000/docs).
+</details>
+
+FastAPI interactive Swagger docs will be available at [http://localhost:8001/docs](http://localhost:8001/docs).
 
 ### 2. Frontend Setup (React + Vite)
 ```bash

@@ -9,6 +9,7 @@
 | **Styling & Layout** | Bootstrap + Custom Retro CSS | ^5.3.x | Asymmetrical responsive grid combined with pixel borders, tactile buttons, and badges. |
 | **Icons & Assets** | Lucide React | Latest | Lightweight vector icons (calendar, download, users, mail, map-pin, external-link). |
 | **Backend Framework** | FastAPI | ^0.110+ | High-performance asynchronous Python API framework with native OpenAPI docs. |
+| **Python Package & Env Manager** | uv | ^0.12+ | Ultra-fast Rust-based package installer and virtualenv manager; manages `.venv` and test runs (`uv run`). |
 | **ASGI Server** | Uvicorn (standard) | ^0.29+ | Production-grade asynchronous web server implementation. |
 | **HTTP Client (Backend)** | HTTPX | ^0.27+ | Modern async HTTP client with connection pooling for upstream GitHub queries. |
 | **Caching Layer** | In-Memory TTL Cache (cachetools) | Latest | Lightweight in-memory caching to enforce rate-limit safety without Redis overhead in M1. |

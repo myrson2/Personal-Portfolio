@@ -2,5 +2,11 @@
   "installCommand": "npm ci --include=dev",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://personal-portfolio-c6mp.onrender.com"
+    }
+  ]
 }

@@ -30,5 +30,14 @@ describe('AboutSection Component', () => {
     expect(screen.getByText('5k+')).toBeInTheDocument();
     expect(screen.getByText('Commits')).toBeInTheDocument();
   });
+
+  it('renders the exact commit count when below one thousand', () => {
+    render(<AboutSection overviewData={{ total_repos: 49, total_commits: 370, is_mock: false }} />);
+
+    expect(screen.getByText('49')).toBeInTheDocument();
+    expect(screen.getByText('Repositories')).toBeInTheDocument();
+    expect(screen.getByText('370')).toBeInTheDocument();
+    expect(screen.getByText('Commits')).toBeInTheDocument();
+  });
 });
 

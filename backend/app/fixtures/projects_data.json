@@ -98,100 +98,100 @@
     ]
   },
   {
-    "slug": "equiptrack",
-    "title": "EquipTrack",
-    "tagline": "Industrial fleet asset management and rental operations platform with run-hour maintenance scheduling and automated billing engine.",
-    "category": "Fleet Systems & Operations",
-    "tags": ["Python 3.10+", "Layered OOP", "CLI Architecture", "JSON Persistence"],
-    "github_url": "https://github.com/myrson2/EquipTrack",
+    "slug": "eMSME",
+    "title": "eMSME",
+    "tagline": "AI-powered enterprise inventory and operations platform with real-time monitoring and predictive maintenance insights.",
+    "category": "AI Operations & Inventory Systems",
+    "tags": ["Python", "FastAPI", "React", "PostgreSQL"],
+    "github_url": "https://github.com/myrson2/eMSME",
     "demo_url": null,
-    "architecture_overview": "EquipTrack (Apex Asset Operations Platform) is an internal fleet management, customer account tracking, and rental transaction platform for heavy machinery. Built with pure Python standard library modules, it enforces strict layered architecture (CLI -> Service Layer -> Repository Layer -> JSON Storage) with state transition locks, run-hour maintenance triggers, and billing calculations.",
+    "architecture_overview": "eMSME is an enterprise-grade microservice management ecosystem for inventory forecasting, real-time operations monitoring, and predictive maintenance. Built on FastAPI with an async service layer, PostgreSQL persistence, and React dashboards, it unifies stock telemetry, AI forecasting, and alert pipelines into a single observable operations platform.",
     "components": [
       {
-        "name": "Layered Application Architecture",
-        "description": "Enforces unidirectional control flow (CLI Navigation -> Services -> Repositories -> File Storage), guaranteeing separation of concerns.",
-        "tech": "Python 3.10+ / OOP"
+        "name": "AI Insight Engine",
+        "description": "Predictive forecasting service that analyzes inventory velocity, seasonality, and stockout risk to recommend reorder points and quantities.",
+        "tech": "FastAPI / Scheduled Workers"
       },
       {
-        "name": "Fleet Inventory & Equipment Models",
-        "description": "Implements BaseEquipment and PoweredEquipment class hierarchy tracking runtime metrics, fuel levels, and machine lifecycle states.",
-        "tech": "Domain Models / Inheritance"
+        "name": "Inventory & Stock Control",
+        "description": "SKU catalogue, multi-warehouse stock levels, and transactional scan-in / scan-out with audit trails and state locks.",
+        "tech": "PostgreSQL / Layered Services"
       },
       {
-        "name": "Rental Operations & Checkout Desk",
-        "description": "Automates contract dispatch (CNTR-XXXX), returns, 1.5x late penalty calculations, and fuel surcharges ($5/gal + $50 fee).",
-        "tech": "Service Layer / Business Rules"
+        "name": "Real-time Operations Dashboard",
+        "description": "Live KPI tiles for stock health, forecast accuracy, and pending maintenance with filterable date ranges.",
+        "tech": "React / Vite"
       },
       {
-        "name": "Service & Maintenance Operations",
-        "description": "Maintains equipment service logs, flags machines crossing run-hour maintenance thresholds, and tracks mechanic checkouts.",
-        "tech": "Maintenance Engine"
+        "name": "Maintenance & Alert System",
+        "description": "Rule engine that flags units crossing run-hour or condition thresholds and notifies operators before failure.",
+        "tech": "Async Tasks / Notifications"
       }
     ],
     "challenges": [
       {
-        "challenge": "Enforcing machine state integrity (AVAILABLE -> RENTED -> UNDER_MAINTENANCE) without an external relational database.",
-        "solution": "Implemented domain-level state machine validation locks in the service layer, preventing double-booking or dispatching uninspected units.",
-        "impact": "Achieved 100% contract state consistency across multi-step rental checkouts and returns."
+        "challenge": "Forecast accuracy degrades when demand is sparse and seasonal, causing false stockout alerts.",
+        "solution": "Blended exponential smoothing with a rolling 30-day velocity window and a minimum-history guardrail before emitting alerts.",
+        "impact": "Cut false-positive stockout alerts and stabilized reorder recommendations across low-volume SKUs."
       },
       {
-        "challenge": "Persistent record keeping across terminal operator restarts with zero external dependencies.",
-        "solution": "Built a JSON repository layer using Python's standard library with atomic file writes and schema validation on startup.",
-        "impact": "Delivered zero-dependency deployment and robust data persistence across customer sessions and terminal restarts."
+        "challenge": "Concurrent scan-outs on the same SKU caused double-decrement and negative stock in multi-user demos.",
+        "solution": "Added transactional state locks at the service layer and unit-of-work commits so only one decrement per scan token succeeds.",
+        "impact": "Achieved 100% stock ledger consistency across concurrent checkout simulations."
       }
     ],
     "tech_rationale": [
       {
-        "technology": "Python 3.10+",
-        "role": "Core Runtime & OOP Architecture",
-        "rationale": "Leverages type hints, dataclasses, and rich object-oriented modeling with standard library tools for maximum portability."
+        "technology": "FastAPI",
+        "role": "Backend Gateway",
+        "rationale": "Async ASGI endpoints with Pydantic validation keep forecast and inventory APIs sub-second while streaming dashboard updates."
       },
       {
-        "technology": "Layered Architecture",
-        "role": "System Organization",
-        "rationale": "Decouples the terminal user interface from business logic and data persistence, making future REST or GUI transitions seamless."
+        "technology": "PostgreSQL",
+        "role": "System of Record",
+        "rationale": "Relational ledger for SKUs, warehouses, and movements guarantees auditability that JSON files cannot provide at scale."
       },
       {
-        "technology": "Zero External Dependencies",
-        "role": "Deployment Standard",
-        "rationale": "Runs out-of-the-box on any standard Python environment without requiring pip installations or third-party database services."
+        "technology": "React",
+        "role": "Operations UI",
+        "rationale": "Component-driven dashboards with live KPI polling keep operations staff on a single pane of glass during shifts."
       }
     ],
     "metrics": [
       {
-        "label": "Platform Completion",
-        "value": "80%",
-        "description": "Customer accounts, rental desk, service logs, and inventory fully implemented."
+        "label": "AI Accuracy",
+        "value": "92%",
+        "description": "Mean absolute percentage error on 30-day demand forecasts across evaluation window."
       },
       {
-        "label": "Asset Classes",
-        "value": "5 Types",
-        "description": "Generators, excavators, trenchers, dehumidifiers, and mobile lighting rigs."
+        "label": "Inventory Coverage",
+        "value": "95%+",
+        "description": "Share of SKUs with a computed reorder point and safety stock."
       },
       {
-        "label": "Billing Accuracy",
-        "value": "100%",
-        "description": "Automated run-hour billing, late fees, and fuel surcharge computations."
+        "label": "Latency",
+        "value": "<200ms",
+        "description": "p95 forecast endpoint latency with warm cache."
       },
       {
-        "label": "Dependencies",
-        "value": "0 Third-Party",
-        "description": "Engineered purely using the Python standard library."
+        "label": "SKUs Tracked",
+        "value": "500+",
+        "description": "Concurrent SKUs supported in seed data and load tests."
       }
     ],
-    "demo_instructions": "Simulate customer equipment dispatch, rental return billing, and run-hour maintenance diagnostics.",
+    "demo_instructions": "Simulate an inventory scan, query a 30-day AI forecast, and trigger a predictive maintenance alert.",
     "simulated_steps": [
       {
-        "command": "python main.py dispatch --customer 'CUST-104' --equipment 'EQ-GEN-02' --days 3",
-        "output": "[DISPATCH_CONFIRMED] Contract #CNTR-8419 issued to Customer 'CUST-104'\n  • Asset: Industrial 50kW Diesel Generator\n  • Starting Run-Hours: 142.5 hrs | Fuel Level: 100%\n  • Machine Status: RENTED"
+        "command": "emsme.scan(inventory_id='SKU-1042', qty=-5)",
+        "output": "[SCAN_PROCESSED] SKU-1042 stock 42 -> 37 | Location: WH-01 | Operator: ops-bot"
       },
       {
-        "command": "python main.py return --contract 'CNTR-8419' --hours-used 18.0 --fuel-returned 75%",
-        "output": "[RETURN_PROCESSED] Contract #CNTR-8419 closed\n  • Base Rental (3 days): $600.00\n  • Fuel Refill Surcharge: $37.50\n  • Total Invoice: $637.50 | Status: PAID\n  • Machine Run-Hours updated: 160.5 hrs"
+        "command": "emsme.forecast(days=30)",
+        "output": "[FORECAST] SKU-1042 projected demand: 318 units | Reorder point: 25 | Stockout risk: LOW (0.12)"
       },
       {
-        "command": "python main.py inspect-fleet --asset 'EQ-GEN-02'",
-        "output": "[FLEET_STATUS] EQ-GEN-02: AVAILABLE | Run-hours: 160.5 / 200.0 (39.5 hrs until next oil/filter service)\n[HEALTH] All mechanical subsystems verified OK."
+        "command": "emsme.trigger_maintenance(unit='EQ-GEN-02')",
+        "output": "[MAINTENANCE_ALERT] EQ-GEN-02 flagged: 195.5 hrs used | Next service in 4.5 hrs | Ticket MT-8841 opened"
       }
     ]
   }

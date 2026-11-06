@@ -9,8 +9,8 @@ describe('ProjectsSection Component', () => {
     expect(screen.getByText('Projects')).toBeInTheDocument();
 
     // Featured Hero Projects
-    expect(screen.getByText('SmartStock AI')).toBeInTheDocument();
-    expect(screen.getByText('Depths Descents: Game Engine')).toBeInTheDocument();
+    expect(screen.getByText('eMSME')).toBeInTheDocument();
+    expect(screen.getByText('ColorGame')).toBeInTheDocument();
 
     // Compact Projects
     expect(screen.getByText('Personal Portfolio Architecture')).toBeInTheDocument();

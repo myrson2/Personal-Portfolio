@@ -39,7 +39,7 @@
 
 ## 3. Functional Requirements
 
-- **FR-1 — Live overview:** `GET /api/github/overview?username=myrson2` returns `total_repos` from `GET /users/{u}` and `total_commits` as **sum of all public repos** (paginated `per_page=100`, `Link` header). `is_mock:false` on live success.
+- **FR-1 — Live overview:** `GET /api/github/overview?username=myrson2` returns `total_repos` from the authenticated `GET /user/repos?visibility=all&affiliation=owner` endpoint (Link-header count, private repos included when the token can read them; falls back to `public_repos` from `GET /users/{u}`). `total_commits` is the **sum of all non-fork public repos** (paginated `per_page=100`, `Link` header). `is_mock:false` on live success.
 - **FR-2 — Live calendar:** `GET /api/github/calendar?username=myrson2` remains GraphQL live (requires `GITHUB_TOKEN`), fallback to `github_calendar_fallback.json` on 401/429/error.
 - **FR-3 — Projects list:** `GET /api/projects` returns enriched summaries for curated slugs `eMSME` + `colorgame` only (each: `slug, title, tagline, category, tags, github_url, demo_url, stars, forks, language, pushed_at`). Stars/forks/language from `GET /repos/myrson2/{slug}` merged with fixture copy.
 - **FR-4 — Project detail:** `GET /api/projects/{slug}` returns full detail for `eMSME` (new fixture drafted from README) and `colorgame` (existing). Unknown slug → `404` `{"detail":"Project not found"}`.

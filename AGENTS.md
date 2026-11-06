@@ -85,9 +85,9 @@ Before marking any task as complete or handing off to the user, execute these ch
 2. **Backend Startup**:
    ```bash
    cd backend
-   uvicorn app.main:app --reload
+   uvicorn app.main:app --reload --port 8001
    ```
-   Verify endpoints return valid JSON and `/docs` is accessible.
+   Verify endpoints return valid JSON and `/docs` is accessible. Port `8001` is the local convention and matches the Vite proxy; port `8000` may be occupied by PostgreSQL.
 3. **Responsive Verification**:
    Verify layout integrity on both mobile (375px) and desktop (1200px+) viewports.
 

@@ -9,9 +9,11 @@ services:
     envVars:
       - key: RESEND_API_KEY
         sync: false          # Injected via Render dashboard secret
+      - key: GITHUB_TOKEN
+        sync: false          # Injected via Render dashboard secret (metadata read: all repositories)
       - key: GITHUB_USERNAME
         value: myrson2
-      - key: CACHE_TTL
+      - key: CACHE_TTL_SECONDS
         value: "900"         # 15 minutes
     healthCheckPath: /api/health
 

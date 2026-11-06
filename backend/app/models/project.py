@@ -39,6 +39,10 @@ class ProjectSummaryResponse(BaseModel):
     tags: List[str]
     github_url: str
     demo_url: Optional[str] = None
+    stars: int = Field(default=0)
+    forks: int = Field(default=0)
+    language: Optional[str] = None
+    pushed_at: Optional[str] = None
 
 
 class ProjectDetailResponse(ProjectSummaryResponse):

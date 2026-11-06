@@ -12,7 +12,7 @@
 [React (Vercel)] -- /api/* -> [Vercel rewrite /api/$1] -> [Render FastAPI]
 FastAPI Router (/api/github, /api/projects, /api/health)
   -> Service (httpx AsyncClient, 5s timeout)
-     -> GitHub REST (/users, /repos) + GraphQL (/graphql)
+     -> GitHub REST (/users, /user/repos, /repos) + GraphQL (/graphql)
      -> TTLCache (in-memory, cachetools) overview_/calendar_/commits_total/repo_meta_
      -> Fixtures JSON (app/fixtures/*.json) for fallback + case-study detail
 ```
@@ -55,7 +55,7 @@ Response `200`:
 {
   "username": "myrson2", "name": "Jose Myrson O. Beros", "bio": "...",
   "avatar_url": "https://...", "html_url": "https://github.com/myrson2",
-  "total_repos": 40, "total_commits": 5240, "followers": 18, "following": 24,
+  "total_repos": 49, "total_commits": 370, "followers": 10, "following": 11,
   "status": "Online", "is_mock": false, "cached_at": "2026-11-06T00:00:00+00:00"
 }
 ```
@@ -196,7 +196,7 @@ Implementation task: fetch `myrson2/eMSME` README via `GH_TOKEN` (for draft accu
 
 - Render Dashboard Environment (not git):
   ```
-  GITHUB_TOKEN=github_pat_... (read:user + public_repo)  # NEW, revokes old leaked token
+  GITHUB_TOKEN=github_pat_... (All repositories + Metadata: read-only)  # NEW, revokes old leaked token
   GITHUB_USERNAME=myrson2 (already in render.yaml)
   RESEND_API_KEY, RESEND_TO_EMAIL (separate feature, unaffected)
   ALLOWED_ORIGINS=http://localhost:5173,https://<vercel>.vercel.app

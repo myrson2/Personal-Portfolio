@@ -1,8 +1,12 @@
 import React from 'react';
 
 export default function AboutSection({ overviewData }) {
-  const reposCount = overviewData?.total_repos ?? 40;
-  const commitsCount = overviewData?.total_commits ? `${Math.floor(overviewData.total_commits / 1000)}k+` : '5k+';
+  const reposCount = overviewData?.total_repos ?? 49;
+  const commitsCount = overviewData?.total_commits != null
+    ? (overviewData.total_commits >= 1000
+      ? `${Math.floor(overviewData.total_commits / 1000)}k+`
+      : `${overviewData.total_commits}`)
+    : '5k+';
 
   return (
     <section className="editorial-section" id="about">

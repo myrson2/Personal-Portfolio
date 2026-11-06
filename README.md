@@ -45,8 +45,8 @@ An interactive, high-performance personal portfolio for **Jose Myrson O. Beros**
 ## Core Sections
 
 1. **Profile Header**: Top banner with overlapping circular avatar, metadata pill strip (`Software Engineer`, `Philippines`, `Email`, `Online` indicator), and 3 tactile CTA buttons (`Schedule meeting`, `Download CV`, `Join Community`) operating as validated interactive placeholders.
-2. **About Section**: Personal bio narrative, inline lowercase social links (`github / linkedin / facebook / instagram`), and a 4-column proof-of-work stat bar (`10 Tech Stacks`, `40 Repositories`, `10x Hackathons`, `5k+ Commits`).
-3. **Projects Showcase**: Hybrid layout featuring 2 large visual hero project cards on top, followed by a compact 3-row list with horizontal hairline dividers and an `All Projects ->` link.
+2. **About Section**: Personal bio narrative, inline lowercase social links (`github / linkedin / facebook / instagram`), and a 4-column proof-of-work stat bar (`10 Tech Stacks`, live repository count, `10x Hackathons`, live commit total).
+3. **Projects Showcase**: Hybrid layout featuring 2 large visual hero project cards (**eMSME** and **ColorGame**) with five-tab case-study modals, followed by a compact 3-row list with horizontal hairline dividers and an `All Projects ->` link.
 4. **Certifications & Activity**:
    - Interactive slideshow/carousel of credential cards.
    - Dynamic GitHub contribution heat map embedded directly below the certifications.
@@ -119,7 +119,17 @@ uvicorn app.main:app --reload --port 8001
 ```
 </details>
 
-FastAPI interactive Swagger docs will be available at [http://localhost:8001/docs](http://localhost:8001/docs).
+Create a `backend/.env` for live GitHub telemetry. Never commit this file:
+
+```bash
+GITHUB_USERNAME=myrson2
+GITHUB_TOKEN=github_pat_...   # read-only metadata for all repositories
+CACHE_TTL_SECONDS=900
+```
+
+The repository counter uses the authenticated `GET /user/repos?visibility=all` endpoint so it includes private repositories. For a fine-grained PAT, select **All repositories** and grant **Metadata: read-only**. A public-only token will report just the public repository count (for example, 40 instead of 49). For local-only verification, `GITHUB_TOKEN` can temporarily be set to `gh auth token` when the GitHub CLI is authenticated with `repo` scope; use a dedicated token for production.
+
+Without a token the API stays up and serves deterministic fixture data with `is_mock: true`. FastAPI interactive Swagger docs will be available at [http://localhost:8001/docs](http://localhost:8001/docs).
 
 ### 2. Frontend Setup (React + Vite)
 ```bash

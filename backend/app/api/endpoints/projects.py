@@ -8,12 +8,12 @@ router = APIRouter(prefix="/projects", tags=["Projects"])
 
 @router.get("", response_model=List[ProjectSummaryResponse])
 async def list_projects():
-    return project_service.get_all_projects()
+    return await project_service.get_all_projects_with_meta()
 
 
 @router.get("/{slug}", response_model=ProjectDetailResponse)
 async def get_project_detail(slug: str):
-    project = project_service.get_project_by_slug(slug)
+    project = await project_service.get_project_by_slug_with_meta(slug)
     if not project:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

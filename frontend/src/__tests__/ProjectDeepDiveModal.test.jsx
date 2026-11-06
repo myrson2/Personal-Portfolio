@@ -4,8 +4,8 @@ import ProjectDeepDiveModal from '../components/Modals/ProjectDeepDiveModal';
 import * as api from '../services/api';
 
 const MOCK_PROJECT = {
-  slug: 'smartstock-ai',
-  title: 'SmartStock AI',
+  slug: 'eMSME',
+  title: 'eMSME',
   tagline: 'Autonomous inventory optimization system forecasting supply volatility.',
   category: 'AI & Systems Engineering',
   tags: ['Python', 'FastAPI', 'React'],
@@ -56,7 +56,7 @@ const MOCK_PROJECT = {
 describe('ProjectDeepDiveModal Component', () => {
   it('does not render when isOpen is false', () => {
     const { container } = render(
-      <ProjectDeepDiveModal slug="smartstock-ai" isOpen={false} onClose={() => {}} />
+      <ProjectDeepDiveModal slug="eMSME" isOpen={false} onClose={() => {}} />
     );
     expect(container).toBeEmptyDOMElement();
   });
@@ -68,14 +68,20 @@ describe('ProjectDeepDiveModal Component', () => {
     });
 
     render(
-      <ProjectDeepDiveModal slug="smartstock-ai" isOpen={true} onClose={() => {}} />
+      <ProjectDeepDiveModal slug="eMSME" isOpen={true} onClose={() => {}} />
     );
 
     await waitFor(() => {
-      expect(screen.getByText('SmartStock AI')).toBeInTheDocument();
+      expect(screen.getByText('eMSME')).toBeInTheDocument();
       expect(screen.getByText('-40%')).toBeInTheDocument();
       expect(screen.getByText('Stockout Reduction')).toBeInTheDocument();
     });
+
+    expect(screen.getByRole('button', { name: /Overview & Metrics/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Architecture/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Engineering Challenges/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Tech Rationale/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Live Sandbox Demo/i })).toBeInTheDocument();
   });
 
   it('switches tabs to display engineering challenges and architecture', async () => {
@@ -85,11 +91,11 @@ describe('ProjectDeepDiveModal Component', () => {
     });
 
     render(
-      <ProjectDeepDiveModal slug="smartstock-ai" isOpen={true} onClose={() => {}} />
+      <ProjectDeepDiveModal slug="eMSME" isOpen={true} onClose={() => {}} />
     );
 
     await waitFor(() => {
-      expect(screen.getByText('SmartStock AI')).toBeInTheDocument();
+      expect(screen.getByText('eMSME')).toBeInTheDocument();
     });
 
     // Switch to Architecture tab
@@ -111,11 +117,11 @@ describe('ProjectDeepDiveModal Component', () => {
     });
 
     render(
-      <ProjectDeepDiveModal slug="smartstock-ai" isOpen={true} onClose={() => {}} />
+      <ProjectDeepDiveModal slug="eMSME" isOpen={true} onClose={() => {}} />
     );
 
     await waitFor(() => {
-      expect(screen.getByText('SmartStock AI')).toBeInTheDocument();
+      expect(screen.getByText('eMSME')).toBeInTheDocument();
     });
 
     // Switch to Live Sandbox tab

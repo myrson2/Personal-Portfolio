@@ -16,13 +16,13 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) d
 Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) and the five-tab project case-study modal (`FEAT-M2-PROJECT-DEEP-DIVE`).
 
 **Latest Delivery — Live GitHub Telemetry + Showcase (`FEAT-M1-GITHUB-LIVE`):**
-1. **Live overview telemetry**: `GET /api/github/overview` now reads `total_repos` from `GET /users/{username}` and computes `total_commits` as the sum of all non-fork public repositories. `is_mock` is `false` on a live GitHub response.
+1. **Live overview telemetry**: `GET /api/github/overview` now reads `total_repos` from the authenticated `GET /user/repos?visibility=all&affiliation=owner` endpoint, so private repositories are included when the token can read them (falling back to `public_repos` from `GET /users/{username}`). `total_commits` remains the sum of all non-fork public repositories. `is_mock` is `false` on a live GitHub response.
 2. **Background commit refresh**: the expensive commit scan runs in FastAPI `BackgroundTasks` after the response. The first uncached request serves the last-known fixture value immediately; the recomputed total is cached and patched into the overview cache for subsequent requests. A per-username lock prevents duplicate concurrent scans, and commit pages are fetched with bounded concurrency (`5`).
 3. **Resilient fallback**: missing token, `401/403/429`, timeout, malformed JSON, or a failed upstream call returns the deterministic fixture with `is_mock: true`, HTTP `200`, and a cached result.
 4. **Curated showcase corrected**: featured projects are now **eMSME** (`myrson2/eMSME`) and **ColorGame** (`myrson2/ColorGame`). The retired `smartstock-ai`, `depths-descents`, and `equiptrack` references were removed from backend fixtures, backend tests, frontend fallbacks, and project UI tests.
 5. **eMSME case study**: added the full five-tab fixture (overview/metrics, architecture, challenges, rationale, simulated sandbox) alongside the existing ColorGame case study.
 6. **Deployment fixes**: `frontend/vercel.json` now preserves the `/api` prefix (`https://personal-portfolio-c6mp.onrender.com/api/$1`), and `render.yaml` uses the actual `CACHE_TTL_SECONDS` setting and declares `GITHUB_TOKEN` as a dashboard-injected secret.
-7. **Verified live snapshot (2026-11-06)**: 40 public repos, **370 total commits**, `is_mock: false`, first live scan `7.15s`, cached read `0.05ms`.
+7. **Verified live snapshot (2026-11-06)**: **49 total repositories** (40 public + 9 private), **370 public non-fork commits**, `is_mock: false`, first live scan `7.15s`, cached read `0.05ms`.
 
 ---
 
@@ -59,7 +59,7 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 - [`backend/app/api/endpoints/github.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/github.py): Injects `BackgroundTasks` into the overview endpoint.
 - [`backend/app/api/endpoints/projects.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/api/endpoints/projects.py): Async list/detail handlers using metadata-enriched service methods.
 - [`backend/app/fixtures/projects_data.json`](file:///C:/Users/merss/Personal-Portfolio/backend/app/fixtures/projects_data.json): Full `colorgame` + new `eMSME` case studies; `equiptrack` removed.
-- [`backend/app/fixtures/github_overview_fallback.json`](file:///C:/Users/merss/Personal-Portfolio/backend/app/fixtures/github_overview_fallback.json): Deterministic fallback aligned to the verified live snapshot (40 repos / 370 commits).
+- [`backend/app/fixtures/github_overview_fallback.json`](file:///C:/Users/merss/Personal-Portfolio/backend/app/fixtures/github_overview_fallback.json): Deterministic fallback aligned to the verified live snapshot (49 repos / 370 commits).
 - [`backend/app/core/config.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/core/config.py): `GITHUB_TOKEN`, `GITHUB_USERNAME`, `CACHE_TTL_SECONDS` settings.
 - [`backend/app/core/cache.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/core/cache.py): In-memory `TTLCache` shared by GitHub and project metadata services.
 - [`backend/tests/test_projects.py`](file:///C:/Users/merss/Personal-Portfolio/backend/tests/test_projects.py): Asserts exactly `eMSME` + `colorgame`, curated order, full eMSME detail, and 404 for unknown slugs.
@@ -70,7 +70,7 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 
 ### Frontend Application (`/frontend`)
 - [`frontend/src/components/Projects/ProjectsSection.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/components/Projects/ProjectsSection.jsx): `FEATURED_PROJECTS` now renders eMSME and ColorGame; both open the existing five-tab modal via `#project/{slug}`.
-- [`frontend/src/services/api.js`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Client fallbacks now include full eMSME and ColorGame case studies; retired project entries removed; overview fallback reports 40 repos / 370 commits.
+- [`frontend/src/services/api.js`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/services/api.js): Client fallbacks now include full eMSME and ColorGame case studies; retired project entries removed; overview fallback reports 49 repos / 370 commits.
 - [`frontend/src/components/About/AboutSection.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/components/About/AboutSection.jsx): Live counters; exact commit count is shown below 1,000 instead of rendering `0k+`.
 - [`frontend/src/components/Modals/ProjectDeepDiveModal.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/components/Modals/ProjectDeepDiveModal.jsx): Existing tabbed modal, keyboard Escape close, hash deep-linking, and simulated terminal.
 - [`frontend/src/__tests__/ProjectsSection.test.jsx`](file:///C:/Users/merss/Personal-Portfolio/frontend/src/__tests__/ProjectsSection.test.jsx): Verifies eMSME + ColorGame cards and two Case Study buttons.
@@ -101,7 +101,7 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 5. **Metadata enrichment is cached separately**:
    - `repo_meta_{slug}` holds stars/forks/language/pushed_at for the shared cache TTL. Failed lookups cache defaults too, preventing a down GitHub from turning every project request into a timeout.
 6. **Fallback parity with live data**:
-   - The overview fallback was updated to the verified live snapshot (40 repos / 370 commits) so a cold/offline first load does not display stale inflated numbers.
+   - The overview fallback was updated to the verified live snapshot (49 repos / 370 commits) so a cold/offline first load does not display stale inflated numbers.
 7. **Human-readable small totals**:
    - The About stat bar uses `5k+` formatting above 1,000 and the exact number below it. This avoids a misleading `0k+` when the live total is under 1,000.
 
@@ -109,10 +109,10 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 
 ## 4. Verification & Test Evidence
 
-### Backend Pytest Suite — 25/25 PASSED
+### Backend Pytest Suite — 31/31 PASSED
 Executed via `cd backend && .\.venv\Scripts\python.exe -m pytest -q`:
 - `tests/test_projects.py`: curated list, eMSME detail, ColorGame detail, unknown-slug 404.
-- `tests/test_github_live.py`: Link-header parsing, 2-page commit pagination (108 commits, fork skipped), upstream failure returns `None`, cached live overview, background deferral, background cache patch.
+- `tests/test_github_live.py`: Link-header parsing (next + last page), owned-repo count (private repos via `GET /user/repos`), public-only fallback, non-owner guard, 2-page commit pagination (108 commits, fork skipped), upstream failure returns `None`, cached live overview, background deferral, background cache patch.
 - `tests/test_github_overview.py`: fallback mode and cache stability.
 - `tests/test_github_calendar.py`: fallback calendar shape.
 - `tests/test_contact.py`, `tests/test_cors.py`, `tests/test_health.py`: unchanged and passing.
@@ -135,15 +135,15 @@ dist/assets/index-D0Tl7wuW.js   200.17 kB │ gzip: 60.76 kB
 ```
 
 ### Live GitHub & Endpoint Smoke Test
-- Local token authenticated successfully: `GET /users/myrson2` → `200`, 40 public repos, rate limit remaining 4,991.
-- `GitHubService.get_overview("myrson2")` → live `is_mock: false`, 40 repos, **370 commits**; first scan `7.15s`, cached second call `0.05ms`.
-- `GET /api/github/overview` through `TestClient` → `200`, `is_mock: false`, 40 repos, 370 commits.
+- Local token authenticated successfully: `GET /users/myrson2` → `200`, 40 public repos; authenticated `GET /user/repos?visibility=all` → **49 total repos** (9 private, 3 forks), rate limit remaining 4,991.
+- `GitHubService.get_overview("myrson2")` → live `is_mock: false`, **49 repos**, **370 public non-fork commits**; first scan `7.15s`, cached second call `0.05ms`.
+- `GET /api/github/overview` through `TestClient` → `200`, `is_mock: false`, 49 repos, 370 commits.
 - `GET /api/projects` → only `eMSME` and `colorgame`, with live stars/forks/language metadata.
 - `GET /api/projects/eMSME` → `200`, full detail with 4 metrics.
 - `GET /api/projects/equiptrack` → `404 {"detail":"Project not found"}`.
 
 ### Secret Audit
-- `grep` over `frontend/src` and `frontend/dist` for `GITHUB_TOKEN`, `RESEND_API_KEY`, `github_pat_`, `ghp_` → **0 matches**.
+- `grep` over `frontend/src` and `frontend/dist` for `GITHUB_TOKEN`, `RESEND_API_KEY`, `github_pat_`, `ghp_`, `gho_` → **0 matches**.
 - `backend/.env.example` contains only empty placeholders.
 - The real token remains in local `backend/.env` (git-ignored) and must be supplied through the Render dashboard in production.
 
@@ -156,7 +156,7 @@ dist/assets/index-D0Tl7wuW.js   200.17 kB │ gzip: 60.76 kB
 cd backend
 # backend/.env:
 #   GITHUB_USERNAME=myrson2
-#   GITHUB_TOKEN=<new fine-grained PAT, read-only public repo metadata>
+#   GITHUB_TOKEN=<fine-grained PAT, all repositories + Metadata: read-only>
 #   CACHE_TTL_SECONDS=900
 .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8001
 ```
@@ -165,6 +165,7 @@ cd backend
 - Overview: `http://localhost:8001/api/github/overview?username=myrson2`
 - Projects: `http://localhost:8001/api/projects`
 - eMSME detail: `http://localhost:8001/api/projects/eMSME`
+- Token scope: the repository counter needs metadata access to **all repositories** (private included) to return 49. A public-only token returns 40. The local `.env` can use `gh auth token` for verification; Render should use a dedicated fine-grained PAT with **All repositories** + **Metadata: read-only**.
 
 ### Local Frontend
 ```powershell

@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://personal-portfolio-c6mp.onrender.com"
+      "destination": "https://personal-portfolio-c6mp.onrender.com/api/$1"
     }
   ]
 }

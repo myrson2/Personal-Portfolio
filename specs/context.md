@@ -35,6 +35,7 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 - [`specs/mission.md`](file:///C:/Users/merss/Personal-Portfolio/specs/mission.md): Product charter, persona workflows, and KPIs.
 - [`specs/tech-stack.md`](file:///C:/Users/merss/Personal-Portfolio/specs/tech-stack.md): Stack matrix, boundary diagrams, and component tree.
 - [`specs/roadmap.md`](file:///C:/Users/merss/Personal-Portfolio/specs/roadmap.md): Phased roadmap across Milestones 1, 2, and 3.
+- [`README.md`](file:///C:/Users/merss/Personal-Portfolio/README.md): Developer-facing overview, setup, API reference, and deployment guide (updated 2026-11-19 to match the closeout plan).
 
 ### Feature Specification Triads
 - **Milestone 1 Core Showcase**:
@@ -159,7 +160,7 @@ dist/assets/index-D0Tl7wuW.js   200.17 kB │ gzip: 60.76 kB
 
 ### Documentation-Plane Verification (2026-11-19)
 
-- Created the three closeout triad files and applied all option-(b) spec edits.
+- Created the three closeout triad files, applied all option-(b) spec edits, and refreshed `README.md`.
 - Confirmed no runtime source, CI config, or secret was changed; no code rebuild was required for the spec edits.
 - Deployed Render/Vercel checks remain pending; see the checklist in §5.
 

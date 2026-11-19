@@ -37,7 +37,7 @@ jobs:
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          CACHE_TTL: ${{ secrets.CACHE_TTL }}
+          CACHE_TTL_SECONDS: "900"
 
       # ── Frontend ─────────────────────────────────────────────────
       - name: Set up Node 20

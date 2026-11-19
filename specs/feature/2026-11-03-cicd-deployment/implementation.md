@@ -92,7 +92,7 @@ jobs:
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
-          CACHE_TTL: ${{ secrets.CACHE_TTL }}
+          CACHE_TTL_SECONDS: "900"
 
       # ── Frontend ─────────────────────────────────────────────────
       - name: Set up Node 20
@@ -198,7 +198,7 @@ services:
         sync: false          # Injected via Render Dashboard → Environment
       - key: GITHUB_USERNAME
         value: myrson2
-      - key: CACHE_TTL
+      - key: CACHE_TTL_SECONDS
         value: "900"         # 15 minutes TTL for GitHub API caching
 ```
 
@@ -215,7 +215,7 @@ services:
 | `RENDER_DEPLOY_HOOK_URL` | Render Dashboard → Service → Deploy Hooks | Webhook URL to trigger re-deploy |
 | `RESEND_API_KEY` | Resend Dashboard → API Keys | Transactional email API key |
 | `GITHUB_USERNAME` | Static value: `myrson2` | GitHub username for API proxy |
-| `CACHE_TTL` | Static value: `900` | Cache TTL in seconds (15 min) |
+| `CACHE_TTL_SECONDS` | Static value: `900` | Cache TTL in seconds (15 min); no secret required |
 
 ---
 

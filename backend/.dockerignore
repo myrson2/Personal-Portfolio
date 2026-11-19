@@ -1,0 +1,8 @@
+# Never bake local secrets or development artifacts into the backend image.
+.env
+.env.*
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tests/

@@ -1,7 +1,7 @@
 # Validation: Dedicated Project Details Modal / Deep Dive Routes
 - **Feature ID**: `FEAT-M2-PROJECT-DEEP-DIVE`
 - **Milestone**: Milestone 2 (`specs/roadmap.md`)
-- **Status**: Approved — Pending Implementation
+- **Status**: Approved — Implemented (M2)
 
 ---
 
@@ -10,8 +10,8 @@
 | Test ID | Type | File | Description | Expected Result |
 |---------|------|------|-------------|-----------------|
 | TC-01 | Integration | `test_projects.py` | `GET /api/projects` returns list | HTTP 200, array of ≥ 2 project summaries |
-| TC-02 | Integration | `test_projects.py` | `GET /api/projects/smartstock-ai` | HTTP 200, complete architecture & challenges |
-| TC-03 | Integration | `test_projects.py` | `GET /api/projects/depths-descents` | HTTP 200, complete game engine architecture |
+| TC-02 | Integration | `test_projects.py` | `GET /api/projects/eMSME` | HTTP 200, complete architecture & challenges |
+| TC-03 | Integration | `test_projects.py` | `GET /api/projects/colorgame` | HTTP 200, complete game engine architecture |
 | TC-04 | Unit | `test_projects.py` | `GET /api/projects/unknown-slug` | HTTP 404, `{"detail": "Project not found"}` |
 | TC-05 | Unit | `ProjectDeepDiveModal.test.jsx` | Modal renders case study content | Architecture, metrics, and tags visible in DOM |
 | TC-06 | Unit | `ProjectDeepDiveModal.test.jsx` | Tab navigation | Clicking "Challenges" shows challenge items |
@@ -53,9 +53,9 @@ npm.cmd run dev
 
 ### Test Case QA-1: Happy Path (Modal & Tabs)
 1. Navigate to `http://localhost:5173/#projects`
-2. Click **"Case Study ->"** on SmartStock AI card
-3. **VERIFY**: Modal opens, URL hash updates to `#project/smartstock-ai`
-4. **VERIFY**: Metrics bar renders (e.g. `-40% Stockout Reduction`)
+2. Click **"Case Study ->"** on eMSME card
+3. **VERIFY**: Modal opens, URL hash updates to `#project/eMSME`
+4. **VERIFY**: Metrics bar renders populated eMSME case-study metrics
 5. **VERIFY**: Tab switching works: Overview → Architecture → Engineering Challenges → Tech Rationale → Live Sandbox
 6. Click **"Run Simulation"** in the Sandbox tab
 7. **VERIFY**: Simulated command output renders with realistic log stream
@@ -63,8 +63,8 @@ npm.cmd run dev
 ---
 
 ### Test Case QA-2: Direct Link Sharing
-1. Open a fresh browser tab and visit `http://localhost:5173/#project/depths-descents`
-2. **VERIFY**: Modal opens directly with Depths Descents case study loaded without any extra clicks
+1. Open a fresh browser tab and visit `http://localhost:5173/#project/colorgame`
+2. **VERIFY**: Modal opens directly with ColorGame case study loaded without any extra clicks
 
 ---
 
@@ -77,7 +77,7 @@ npm.cmd run dev
 
 ### Test Case QA-4: Offline Fallback Verification
 1. Stop backend server (`Ctrl+C` in backend terminal)
-2. In browser, click **"Case Study ->"** on SmartStock AI
+2. In browser, click **"Case Study ->"** on eMSME
 3. **VERIFY**: Modal renders seamlessly from client fallback data without blank screen or console crashes
 
 ---

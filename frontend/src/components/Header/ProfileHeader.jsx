@@ -168,7 +168,7 @@ export default function ProfileHeader({
         <div className="hero-right-column">
           <div className="hero-character-card">
             <img
-              src="/image/luffy.webp"
+              src="/image/myrson.jpg"
               alt="Jose Myrson O. Beros"
               className="hero-character-img"
               onError={(e) => {

@@ -2,12 +2,15 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.core.cache import clear_cache
+from app.core.config import settings
 
 client = TestClient(app)
 
 
 @pytest.fixture(autouse=True)
-def clean_cache():
+def clean_cache(monkeypatch):
+    # Force deterministic fixture mode even when a local .env has a real token.
+    monkeypatch.setattr(settings, "GITHUB_TOKEN", "")
     clear_cache()
     yield
     clear_cache()

@@ -38,5 +38,11 @@
 - **Strictly Out-of-Scope**:
   - Full relational database / ORM setup (M1 relies on fast in-memory caching and JSON data).
   - Multi-user authentication or session state.
-  - Live third-party calendar booking integration (e.g., Calendly/Cal.com APIs deferred to M2).
+  - Live third-party calendar booking integration (e.g., Calendly/Cal.com APIs) — deferred beyond M2; tracked as a roadmap follow-up. The `Schedule meeting` CTA remains a validated contact-request placeholder.
   - Heavy 3D canvas libraries (Three.js, Babylon.js).
+
+---
+
+### Amendment Log
+
+- **2026-11-19**: Line 41 revised from "deferred to M2" to "deferred beyond M2; tracked as a roadmap follow-up" so this constitution agrees with `specs/roadmap.md`. Developer sign-off recorded in `specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/specification.md` (grilling decisions Q7/Q8).

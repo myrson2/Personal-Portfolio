@@ -1,7 +1,7 @@
 # Implementation: Dedicated Project Details Modal / Deep Dive Routes
 - **Feature ID**: `FEAT-M2-PROJECT-DEEP-DIVE`
 - **Milestone**: Milestone 2 (`specs/roadmap.md`)
-- **Status**: Approved — Pending Implementation
+- **Status**: Approved — Implemented (M2)
 
 ---
 

@@ -1,7 +1,16 @@
+import pytest
 from fastapi.testclient import TestClient
+
+from app.core.config import settings
 from app.main import app
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def no_live_github(monkeypatch):
+    # Keep project fixture tests offline even when a local .env has a token.
+    monkeypatch.setattr(settings, "GITHUB_TOKEN", "")
 
 
 def test_list_projects_returns_200_and_summaries():
@@ -9,15 +18,17 @@ def test_list_projects_returns_200_and_summaries():
     assert res.status_code == 200
     data = res.json()
     assert isinstance(data, list)
-    assert len(data) >= 2
     slugs = [p["slug"] for p in data]
-    assert "colorgame" in slugs
-    assert "equiptrack" in slugs
+    assert len(data) == 2
+    assert set(slugs) == {"eMSME", "colorgame"}
+    assert slugs[0] == "eMSME"  # curated showcase order
     for p in data:
         assert "title" in p
         assert "tagline" in p
         assert "tags" in p
         assert "github_url" in p
+        assert "stars" in p
+        assert "forks" in p
 
 
 def test_get_colorgame_project_detail():
@@ -36,15 +47,18 @@ def test_get_colorgame_project_detail():
     assert len(data["simulated_steps"]) > 0
 
 
-def test_get_equiptrack_project_detail():
-    res = client.get("/api/projects/equiptrack")
+def test_get_eMSME_project_detail():
+    res = client.get("/api/projects/eMSME")
     assert res.status_code == 200
     data = res.json()
-    assert data["slug"] == "equiptrack"
-    assert data["title"] == "EquipTrack"
-    assert "Python 3.10+" in data["tags"]
+    assert data["slug"] == "eMSME"
+    assert data["title"] == "eMSME"
+    assert "Python" in data["tags"]
+    assert len(data["components"]) > 0
+    assert len(data["challenges"]) > 0
     assert len(data["metrics"]) > 0
-    assert any(m["label"] == "Platform Completion" for m in data["metrics"])
+    assert any(m["label"] == "AI Accuracy" for m in data["metrics"])
+    assert len(data["simulated_steps"]) > 0
 
 
 def test_get_project_unknown_slug_returns_404():

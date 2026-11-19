@@ -46,11 +46,11 @@ THEN the pipeline must halt immediately, report the failing step clearly in the 
 | FR-2 | CI must trigger on: `push` to `main` and `pull_request` targeting `main`. |
 | FR-3 | Backend tests: `cd backend && uv run pytest tests -v` on `ubuntu-latest` (19 tests). |
 | FR-4 | Frontend lint: `cd frontend && npm run lint` (ESLint — 0 errors required). |
-| FR-5 | Frontend tests: `cd frontend && npm test -- --run` (Vitest — 20 tests must pass). |
+| FR-5 | Frontend tests: `cd frontend && npm test -- --run` (Vitest — 21 tests must pass). |
 | FR-6 | Frontend build: `cd frontend && npm run build` must produce `dist/` with 0 errors. |
-| FR-7 | On `push` to `main` only: deploy frontend to Vercel via `amondnet/vercel-action@v25`. |
+| FR-7 | On `push` to `main` only: deploy frontend to Vercel via the Vercel CLI (`vercel pull/build/deploy`) with `working-directory: ./frontend`. |
 | FR-8 | On `push` to `main` only: trigger Render backend re-deploy via deploy hook `curl POST`. |
-| FR-9 | Secrets `RESEND_API_KEY`, `GITHUB_USERNAME`, `CACHE_TTL`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RENDER_DEPLOY_HOOK_URL` must be stored as GitHub Actions repository secrets — never hard-coded. |
+| FR-9 | Secrets `RESEND_API_KEY`, `GITHUB_USERNAME`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RENDER_DEPLOY_HOOK_URL` must be stored as GitHub Actions repository secrets — never hard-coded. `CACHE_TTL_SECONDS: "900"` is a static env value, not a secret; `GITHUB_TOKEN` must never be added to workflow files. |
 | FR-10 | A `backend/Dockerfile` must exist for Render container compatibility. |
 | FR-11 | A `render.yaml` IaC file must exist at the repository root documenting the backend service spec. |
 

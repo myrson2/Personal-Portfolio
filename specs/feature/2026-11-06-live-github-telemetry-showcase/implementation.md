@@ -40,7 +40,7 @@ FastAPI Router (/api/github, /api/projects, /api/health)
 - `frontend/src/services/api.js` — **modify:** add `eMSME` to `FALLBACK_PROJECTS` (same full shape), delete `equiptrack` key.
 - `frontend/src/components/Projects/ProjectsSection.jsx` — **modify:** `FEATURED_PROJECTS` = `eMSME` (id 1, title “eMSME”, github `https://github.com/myrson2/eMSME`) + `colorgame` (id 2, title “ColorGame”).
 
-Cache keys: `overview_<user>`, `calendar_<user>`, `commits_total_<user>`, `repo_meta_<slug>`; TTL `settings.CACHE_TTL_SECONDS` (fix `render.yaml` key from `CACHE_TTL` to `CACHE_TTL_SECONDS`).
+Cache keys: `overview_<user>`, `calendar_<user>`, `commits_total_<user>`, `repo_meta_<slug>`; TTL `settings.CACHE_TTL_SECONDS` (`render.yaml` uses the `CACHE_TTL_SECONDS` key).
 
 ---
 

@@ -3,6 +3,7 @@
 - **Feature ID:** `FEAT-M1-GITHUB-LIVE`
 - **Milestone:** M1
 - **Date:** 2026-11-06
+- **Status:** Implemented locally; deployed Render/Vercel checks pending
 - **Local Verification:** Complete — 31/31 backend tests, 21/21 frontend tests, production build, live GitHub smoke (**49 total repos** / 370 public non-fork commits), secret audit. Deployed Render/Vercel checks pending.
 
 ---
@@ -15,7 +16,7 @@
 |1a| repo count includes private repos | pytest | `pytest tests/test_github_live.py -k owned_repo_count -v` | `GET /user/repos` Link-header count returned (49), public-only fallback documented |
 |2| overview fallback no-token | pytest | same suite, unset `GITHUB_TOKEN` | 200, `is_mock:true`, fixture shape, cached |
 |3| calendar live + fallback | pytest | `pytest tests/test_github_calendar.py -v` | 200, `weeks` array; fallback `is_mock:true` without token |
-|4| commit-sum pagination | pytest (httpx mock, 2 pages) | `pytest tests/test_github_overview.py::test_commit_sum_paginates` | correct sum, dedupes forks, clamps `per_page=100` |
+|4| commit-sum pagination | pytest (httpx mock, 2 pages) | `pytest tests/test_github_live.py::test_commit_sum_paginates_and_skips_forks` | correct sum, dedupes forks, clamps `per_page=100` |
 |5| background refresh does not block | pytest / timing | mocked slow commits (sleep 2s) | cached response <200ms, background task updates cache |
 |6| projects list/detail (new slugs) | pytest | `pytest tests/test_projects.py -v` | `GET /api/projects` → `["eMSME","colorgame"]` only; detail 200 for both; `equiptrack` → 404; unknown → 404 |
 |7| secret leak audit | grep | `grep -rE "GITHUB_TOKEN|RESEND_API_KEY|github_pat_|ghp_|gho_" frontend/dist/` | 0 matches |
@@ -40,7 +41,7 @@ Checked against `specs/constitution.md` (70/30/20 palette, two-column editorial,
 | **Backend as Single Gateway** | ✅ COMPLIANT | Frontend `api.js` only calls `/api/...`; never `api.github.com` directly. `resend`/`httpx` server-side only. |
 | **CORS Invariants** | ✅ COMPLIANT | `app/main.py:13-19` `CORSMiddleware` with `settings.cors_origins`. Render `ALLOWED_ORIGINS` includes `localhost:5173` + Vercel prod. `test_cors.py` passes. |
 | **Input Validation (Pydantic)** | ✅ COMPLIANT | `GitHubOverviewResponse`, `GitHubCalendarResponse`, `ProjectDetailResponse` strict models; `ContactSendRequest` email regex unchanged. |
-| **In-Memory TTL Cache (15–60 min)** | ✅ COMPLIANT | `app/core/cache.py:5 TTLCache(ttl=CACHE_TTL_SECONDS)`. Keys `overview_/calendar_/commits_total/repo_meta_`. `render.yaml` fixed to `CACHE_TTL_SECONDS=900`. |
+| **In-Memory TTL Cache (15–60 min)** | ✅ COMPLIANT | `app/core/cache.py:5 TTLCache(ttl=CACHE_TTL_SECONDS)`. Keys `overview_/calendar_/commits_total_{username}/repo_meta_`. `render.yaml` fixed to `CACHE_TTL_SECONDS=900`. |
 | **Upstream Resilience / Fallbacks** | ✅ COMPLIANT | `github_service.py` fallback fixtures on 401/429/timeout, `is_mock:true`. `project_service.py` fixtures bundled; `Dockerfile` copies `app/fixtures/` via `COPY . .` (context `backend`). |
 | **Scope Discipline M1** | ✅ COMPLIANT | No DB/ORM, no JWT/auth (no `get_current_user`), no Three.js, no calendar booking. `render.yaml` adds no `plan: database` service. |
 | **70/30/20 + Two-Column Editorial** | ✅ COMPLIANT | No CSS changes in this feature; `ProfileHeader`/`ProjectsSection` layout untouched except slug titles. WCAG 2.1 AA preserved. |
@@ -76,7 +77,7 @@ curl https://<render>/api/projects/equiptrack  # expect 404
 curl "https://<vercel>/api/health"
 curl "https://<vercel>/api/github/overview?username=myrson2"  # identical to Render direct
 ```
-Verify `is_mock` flag, `total_commits` not hardcoded 5240, calendar `weeks` non-empty.
+Verify `is_mock` flag, `total_commits` reflects the current snapshot (370 as of 2026-11-06) rather than a stale hardcoded value, calendar `weeks` non-empty.
 
 ### Step 3 — Regression
 1. Remove token in Render (temporarily) → redeploy → curl shows `is_mock:true`, frontend shows cached Offline indicator, no crash.

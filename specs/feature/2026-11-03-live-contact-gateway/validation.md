@@ -1,7 +1,7 @@
 # Validation: Live Contact Gateway
 - **Feature ID**: `FEAT-M2-LIVE-CONTACT-GATEWAY`
 - **Milestone**: Milestone 2
-- **Status**: Approved — Pending Implementation
+- **Status**: Approved — Implemented (M2); live scheduler deferred beyond M2
 
 ---
 
@@ -113,7 +113,7 @@ Cross-referenced against `specs/constitution.md` architectural invariants:
 | **Mobile UX (375px+)** | ✅ | Success/error states reuse existing modal responsive layout; form inputs retain `font-size: 16px` to prevent iOS automatic zoom. CTA button height ≥ 44px for touch targets. |
 | **No PostgreSQL / ORM (M1/M2 Scope)** | ✅ | Rate limiter uses `TTLCache` (in-memory, same library as M1 GitHub cache). No database tables introduced. |
 | **No JWT / Multi-user Auth** | ✅ | Contact endpoint is fully public. No `get_current_user` or session dependencies. |
-| **Scope Discipline (M2)** | ✅ | No Calendly integration, no multi-user auth, no 3D canvas, no database ORM. Delivery mechanism only. |
+| **Scope Discipline (M2)** | ✅ | No Calendly integration, no multi-user auth, no 3D canvas, no database ORM. Delivery mechanism only. Live calendar booking formally deferred beyond M2 via the signed-off amendment in `specs/constitution.md` and `specs/roadmap.md`. |
 
 ---
 

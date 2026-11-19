@@ -1,10 +1,10 @@
 # Implementation Context & Historical Record
 
-- **Current Milestone**: Milestone 2 branch (includes the Milestone 1 telemetry/showcase backfill defined in `specs/roadmap.md`)
-- **Active Feature ID**: `FEAT-M1-GITHUB-LIVE`
-- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`
-- **Status**: Implemented & verified locally; Render/Vercel redeploy pending
-- **Completed At**: 2026-11-06T14:40:00+08:00
+- **Current Milestone**: Milestone 2 closeout (includes the Milestone 1 telemetry/showcase backfill defined in `specs/roadmap.md`)
+- **Active Feature ID**: `FEAT-M2-CLOSEOUT-RELEASE`
+- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`, `FEAT-M2-CICD`, `FEAT-M1-GITHUB-LIVE`
+- **Status**: Documentation updated 2026-11-19; Render/Vercel redeploy and live verification still pending
+- **Completed At**: 2026-11-06T14:40:00+08:00 (documentation closeout: 2026-11-19)
 - **Author / Lead**: Jose Myrson O. Beros
 
 ---
@@ -23,6 +23,8 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
 5. **eMSME case study**: added the full five-tab fixture (overview/metrics, architecture, challenges, rationale, simulated sandbox) alongside the existing ColorGame case study.
 6. **Deployment fixes**: `frontend/vercel.json` now preserves the `/api` prefix (`https://personal-portfolio-c6mp.onrender.com/api/$1`), and `render.yaml` uses the actual `CACHE_TTL_SECONDS` setting and declares `GITHUB_TOKEN` as a dashboard-injected secret.
 7. **Verified live snapshot (2026-11-06)**: **49 total repositories** (40 public + 9 private), **370 public non-fork commits**, `is_mock: false`, first live scan `7.15s`, cached read `0.05ms`.
+
+**Latest Documentation Closeout — Milestone 2 Closeout & Release Readiness (`FEAT-M2-CLOSEOUT-RELEASE`):** Recorded the merge-conflict decisions, token rotation and redeploy sequence, scheduler deferral (roadmap + constitution amendment with sign-off), and documentation hygiene fixes. No runtime source, CI config, or secret was changed by this feature.
 
 ---
 
@@ -47,10 +49,14 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
   - [`specs/feature/2026-11-03-project-deep-dive-modals/specification.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/specification.md)
   - [`specs/feature/2026-11-03-project-deep-dive-modals/implementation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/implementation.md)
   - [`specs/feature/2026-11-03-project-deep-dive-modals/validation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-project-deep-dive-modals/validation.md)
-- **Live GitHub Telemetry + Showcase (current)**:
+- **Live GitHub Telemetry + Showcase (previous)**:
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/specification.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/specification.md)
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/implementation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/implementation.md)
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/validation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/validation.md)
+- **Milestone 2 Closeout & Release Readiness (current)**:
+  - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/specification.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/specification.md)
+  - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/implementation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/implementation.md)
+  - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/validation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/validation.md)
 
 ### Backend Gateway (`/backend`)
 - [`backend/app/services/github_service.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/services/github_service.py): Live GitHub REST/GraphQL client, fixture fallback, `overview_*`/`calendar_*`/`commits_total_*` TTL cache keys, bounded parallel commit counting, and background refresh with a duplicate-scan guard.
@@ -104,6 +110,10 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
    - The overview fallback was updated to the verified live snapshot (49 repos / 370 commits) so a cold/offline first load does not display stale inflated numbers.
 7. **Human-readable small totals**:
    - The About stat bar uses `5k+` formatting above 1,000 and the exact number below it. This avoids a misleading `0k+` when the live total is under 1,000.
+8. **Closeout decisions are locked, not implicit**:
+   - Merge keeps `CACHE_TTL_SECONDS: "900"`, adopts main's Render deploy-hook safety check, keeps the branch's `working-directory: ./frontend` Vercel build, and keeps the `frontend/vercel.json` trailing newline.
+   - Token rotation requires all-repository read access (a public-only token reports 40 instead of 49). No token is ever added to workflow files.
+   - Live calendar booking is deferred beyond M2 by a signed-off amendment to `specs/constitution.md` plus the roadmap update; the CTA relabel is a logged future code task.
 
 ---
 
@@ -147,6 +157,12 @@ dist/assets/index-D0Tl7wuW.js   200.17 kB │ gzip: 60.76 kB
 - `backend/.env.example` contains only empty placeholders.
 - The real token remains in local `backend/.env` (git-ignored) and must be supplied through the Render dashboard in production.
 
+### Documentation-Plane Verification (2026-11-19)
+
+- Created the three closeout triad files and applied all option-(b) spec edits.
+- Confirmed no runtime source, CI config, or secret was changed; no code rebuild was required for the spec edits.
+- Deployed Render/Vercel checks remain pending; see the checklist in §5.
+
 ---
 
 ## 5. Operational Runbook
@@ -187,7 +203,7 @@ npm run build
 ```
 
 ### Deployment Checklist
-1. **Revoke the previously exposed GitHub PAT** and create a new fine-grained token with read-only access to public repository metadata (or classic `read:user` + `public_repo`).
+1. **Revoke the previously exposed GitHub PAT** and create a new fine-grained token with **all-repository** read access (Metadata: read-only, plus Contents read for commit counting). A public-repos-only token reports 40 instead of 49 and is insufficient for the verified snapshot.
 2. In the Render dashboard, set `GITHUB_TOKEN` to the new value. Do **not** commit it to `render.yaml`, `.env.example`, or workflow files.
 3. Confirm Render environment includes `GITHUB_USERNAME=myrson2`, `CACHE_TTL_SECONDS=900`, and the existing Resend variables. Redeploy the backend.
 4. Redeploy the frontend so `frontend/vercel.json` applies the `/api/$1` rewrite.
@@ -215,5 +231,6 @@ npm run build
 | GitHub rate limits | Token + 15-minute TTL + bounded concurrency + per-username lock keep usage low. `401/403/429` always degrade to cached/fixture data. |
 | eMSME case-study copy is a repository snapshot | Manual re-sync when the upstream README materially changes. |
 | Deployment is not yet live-verified | Complete the Render/Vercel redeploy checklist above, then flip the deployed acceptance boxes in `validation.md`. |
+| Milestone 2 closeout plan is recorded but not executed | Merge, token rotation, redeploy, and live checks remain user-executed steps; tracked in `FEAT-M2-CLOSEOUT-RELEASE`. |
 
-**Next roadmap item:** Milestone 2 Workstream 3 (Automated CI/CD & Production Deployment) in [`specs/feature/2026-11-03-cicd-deployment/`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-03-cicd-deployment/). The workflow secrets list must use `CACHE_TTL_SECONDS` (not the retired `CACHE_TTL`) and must **not** add `GITHUB_TOKEN`; the token belongs only in the Render dashboard.
+**Next roadmap item:** Milestone 3 — AI Engineer Showcase Sandbox, per [`specs/roadmap.md`](file:///C:/Users/merss/Personal-Portfolio/specs/roadmap.md). Begin with a dedicated feature triad for the sandbox; keep the deferred meeting scheduler in the M2 Deferred Backlog unless M3 explicitly schedules it. Prerequisites: all M2 exit criteria met, `main` contains the merged closeout branch, live curl checks recorded, and Lighthouse ≥ 95 / WCAG 2.1 AA measurements captured here. **Never add `GITHUB_TOKEN` to workflow files** — the token belongs only in the Render dashboard.

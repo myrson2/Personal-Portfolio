@@ -2,7 +2,7 @@
 
 - **Feature ID**: `FEAT-M1-CORE-SHOWCASE`
 - **Target Milestone**: Milestone 1
-- **Status**: Approved & Ready for Implementation
+- **Status**: Approved — Implemented (M1)
 
 ---
 
@@ -107,7 +107,7 @@ Personal-Portfolio/
 #### C. `AboutSection.test.jsx`
 - Verifies personal narrative copy renders accurately.
 - Verifies exact social links render with proper anchors: `github`, `linkedin`, `facebook`, `instagram`.
-- Verifies the 4-metric stat bar renders counters: `10 Tech Stacks`, `40 Repositories`, `10x Hackathons`, `5k+ Commits`.
+- Verifies the 4-metric stat bar renders live counters with `5k+` formatting above 1,000 and exact counts below it (current fallback snapshot: 49 repositories / 370 commits).
 
 #### D. `ProjectsSection.test.jsx`
 - Verifies exactly 2 featured hero project cards are rendered with tags and links.
@@ -129,12 +129,12 @@ Personal-Portfolio/
 
 | Step | Action | Expected Result | Pass/Fail |
 | :--- | :--- | :--- | :--- |
-| **QA-1** | Run `npm run test` in `/frontend`. | All Vitest component test suites pass with 0 errors. | [ ] |
-| **QA-2** | Run `pytest` in `/backend`. | All API endpoints, caching, fallback, and validation tests pass with 0 failures. | [ ] |
-| **QA-3** | Run `npm run build` in `/frontend`. | Build succeeds cleanly with zero bundle errors. | [ ] |
-| **QA-4** | Open page at desktop viewport (1440px). | Two-column editorial layout displays with sticky/anchored left titles. | [ ] |
-| **QA-5** | Open page at mobile viewport (375px). | Two-column layout cleanly collapses to stacked single column without horizontal scroll. | [ ] |
-| **QA-6** | Click `Schedule meeting`, fill form, and submit. | Modal validates input, sends POST to backend, displays success message. | [ ] |
-| **QA-7** | Stop backend or disconnect internet. | Frontend loads gracefully with mock fallback data and sample indicator without throwing errors. | [ ] |
-| **QA-8** | Inspect contrast with Chrome DevTools / Lighthouse. | Color contrast ratio meets WCAG 2.1 AA across all text elements. | [ ] |
+| **QA-1** | Run `npm run test` in `/frontend`. | All Vitest component test suites pass with 0 errors. | [x] |
+| **QA-2** | Run `pytest` in `/backend`. | All API endpoints, caching, fallback, and validation tests pass with 0 failures. | [x] |
+| **QA-3** | Run `npm run build` in `/frontend`. | Build succeeds cleanly with zero bundle errors. | [x] |
+| **QA-4** | Open page at desktop viewport (1440px). | Two-column editorial layout displays with sticky/anchored left titles. | [x] |
+| **QA-5** | Open page at mobile viewport (375px). | Two-column layout cleanly collapses to stacked single column without horizontal scroll. | [x] |
+| **QA-6** | Click `Schedule meeting`, fill form, and submit. | Modal validates input, sends POST to backend, displays success message. | [x] |
+| **QA-7** | Stop backend or disconnect internet. | Frontend loads gracefully with mock fallback data and sample indicator without throwing errors. | [x] |
+| **QA-8** | Inspect contrast with Chrome DevTools / Lighthouse. | Color contrast ratio meets WCAG 2.1 AA across all text elements. | [x] |
 

@@ -4,6 +4,7 @@
 - **Feature ID**: `FEAT-M2-CICD`
 - **Milestone**: Milestone 2, Workstream 3
 - **Date**: 2026-11-03
+- **Status**: Approved — Implemented (CI/CD pipeline built; deployment verification pending)
 
 ---
 
@@ -11,8 +12,8 @@
 
 | # | Test | Tool | Command | Pass Criteria |
 |---|------|------|---------|--------------|
-| 1 | Backend unit + integration suite | pytest | `cd backend && uv run pytest tests -v` | 19/19 passed |
-| 2 | Frontend component test suite | Vitest | `cd frontend && npm test -- --run` | 20/20 passed |
+| 1 | Backend unit + integration suite | pytest | `cd backend && uv run pytest tests -v` | 31/31 passed |
+| 2 | Frontend component test suite | Vitest | `cd frontend && npm test -- --run` | 21/21 passed |
 | 3 | Frontend lint | ESLint | `cd frontend && npm run lint` | 0 errors, 0 warnings |
 | 4 | Frontend production build | Vite | `cd frontend && npm run build` | `dist/` created, exit code 0 |
 | 5 | Secret bundle audit | grep | `grep -r "RESEND_API_KEY" frontend/dist/` | 0 matches |
@@ -35,7 +36,7 @@ Checked against `specs/constitution.md` invariants:
 | **No Multi-user Auth / JWT / Cookies** | ✅ COMPLIANT | No auth layer introduced. CI only runs existing tests which verify no auth endpoints exist. |
 | **No Three.js / Babylon.js / Heavy 3D** | ✅ COMPLIANT | No new frontend dependencies added. Vite build audit (`npm run build`) would flag any unexpected large dependency. |
 | **FastAPI + Uvicorn only backend runtime** | ✅ COMPLIANT | `backend/Dockerfile` CMD: `uvicorn app.main:app --host 0.0.0.0 --port 8000`. No alternative ASGI server. |
-| **In-memory TTL cache preserved** | ✅ COMPLIANT | `render.yaml` passes `CACHE_TTL=900` env var; `cachetools.TTLCache` initializes from this value in `core/cache.py`. |
+| **In-memory TTL cache preserved** | ✅ COMPLIANT | `render.yaml` passes `CACHE_TTL_SECONDS=900` env var; `cachetools.TTLCache` initializes from this value in `core/cache.py`. |
 | **CORS middleware intact** | ✅ COMPLIANT | No changes to `app/main.py`. CI runs `test_cors.py` (2 tests) which verify allowed/disallowed origins. |
 | **Upstream resilience & mock fallbacks** | ✅ COMPLIANT | `render.yaml` sets `healthCheckPath: /api/health`. Render withholds traffic until the endpoint confirms `{"status":"ok"}`. Fallback fixtures remain bundled in the backend. |
 | **Scope Discipline — M2 scope only** | ✅ COMPLIANT | CI/CD is the final M2 workstream. Pipeline introduces 0 M3 features (no AI demos, analytics, or terminal mode). |
@@ -59,7 +60,7 @@ Execute the following steps after every successful `main` push:
 4. Verify the hero typewriter cursor animates.
 
 ### Step 3 — Verify Deep Dive Modal (Critical Path)
-1. On the Projects section, click **"Case Study →"** on the SmartStock AI card.
+1. On the Projects section, click **"Case Study →"** on the eMSME card.
 2. Confirm the `ProjectDeepDiveModal` opens and all 5 tabs are accessible: Overview & Metrics, Architecture, Engineering Challenges, Tech Rationale, Live Sandbox.
 3. In the Simulated Sandbox terminal, type a command and verify the output renders correctly.
 4. Press **Escape** to close the modal. Confirm URL hash clears back to `#projects`.
@@ -76,10 +77,10 @@ curl https://<render-url>/api/github/overview
 
 # Projects list
 curl https://<render-url>/api/projects
-# Expected: HTTP 200, array with smartstock-ai and depths-descents
+# Expected: HTTP 200, array with eMSME and colorgame
 
 # Project detail
-curl https://<render-url>/api/projects/smartstock-ai
+curl https://<render-url>/api/projects/eMSME
 # Expected: HTTP 200, full case study JSON
 
 # Invalid slug

@@ -1,7 +1,7 @@
 # Implementation: Live Contact Gateway
 - **Feature ID**: `FEAT-M2-LIVE-CONTACT-GATEWAY`
 - **Milestone**: Milestone 2
-- **Status**: Approved — Pending Implementation
+- **Status**: Approved — Implemented (M2); live scheduler deferred beyond M2
 
 ---
 

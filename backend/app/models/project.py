@@ -1,55 +1,23 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from typing import List, Literal, Optional
+
+from pydantic import BaseModel, ConfigDict
 
 
-class ProjectMetric(BaseModel):
-    label: str
-    value: str
-    description: str
+class ProjectItem(BaseModel):
+    """One owned GitHub repo. Only GitHub-derived metadata; nothing inferred."""
 
+    model_config = ConfigDict(extra="forbid")
 
-class ChallengeSolution(BaseModel):
-    challenge: str
-    solution: str
-    impact: str
-
-
-class TechRationale(BaseModel):
-    technology: str
-    role: str
-    rationale: str
-
-
-class ArchitectureComponent(BaseModel):
     name: str
-    description: str
-    tech: str
+    language: Optional[str] = None  # GitHub's derived primary language; null if GitHub has none
+    description: Optional[str] = None
+    html_url: str
 
 
-class SimulatedDemoStep(BaseModel):
-    command: str
-    output: str
+class ProjectsResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
 
-
-class ProjectSummaryResponse(BaseModel):
-    slug: str
-    title: str
-    tagline: str
-    category: str
-    tags: List[str]
-    github_url: str
-    demo_url: Optional[str] = None
-    stars: int = Field(default=0)
-    forks: int = Field(default=0)
-    language: Optional[str] = None
-    pushed_at: Optional[str] = None
-
-
-class ProjectDetailResponse(ProjectSummaryResponse):
-    architecture_overview: str
-    components: List[ArchitectureComponent]
-    challenges: List[ChallengeSolution]
-    tech_rationale: List[TechRationale]
-    metrics: List[ProjectMetric]
-    demo_instructions: str
-    simulated_steps: List[SimulatedDemoStep]
+    projects: List[ProjectItem]
+    is_mock: bool
+    source: Literal["live", "snapshot", "fixture"]
+    cached_at: str

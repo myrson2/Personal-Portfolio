@@ -1,115 +1,134 @@
-import asyncio
+"""Projects = the top public repos owned by settings.GITHUB_USERNAME.
+
+Flow: live GitHub fetch -> on success, write a last-known-good snapshot to disk.
+On any failure (no token, 401/403/429, timeout, network, bad payload) serve the
+snapshot, or the committed (empty) fixture if no snapshot exists yet.
+"""
 import json
 import logging
+import os
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 import httpx
 
 from app.core.cache import get_cached, set_cached
 from app.core.config import settings
-from app.models.project import ProjectSummaryResponse, ProjectDetailResponse
-from app.services.github_service import fetch_repo_meta, _headers
+from app.models.project import ProjectItem, ProjectsResponse
+from app.services.github_service import GITHUB_API, _headers
 
 logger = logging.getLogger(__name__)
 
-FIXTURES_PATH = Path(__file__).resolve().parent.parent / "fixtures" / "projects_data.json"
-
-# Curated showcase order: eMSME first, then ColorGame (matches ProjectsSection.jsx)
-CURATED_ORDER = ["eMSME", "colorgame"]
-# GitHub repo names differ in case from slugs (slug is lowercase, repo is exact case)
-REPO_NAME_BY_SLUG: Dict[str, str] = {
-    "eMSME": "eMSME",
-    "colorgame": "ColorGame",
-}
+BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
+FIXTURE_PATH = BACKEND_DIR / "app" / "fixtures" / "projects_fallback.json"
+CACHE_KEY = "projects_list"
+MAX_PROJECTS = 5
+MAX_PAGES = 10
 
 
-class ProjectService:
-    def __init__(self):
-        self._projects_cache: Dict[str, ProjectDetailResponse] = {}
-        self._load_fixtures()
+def _snapshot_path() -> Path:
+    path = Path(settings.PROJECTS_SNAPSHOT_PATH)
+    return path if path.is_absolute() else BACKEND_DIR / path
 
-    def _load_fixtures(self) -> None:
-        if not FIXTURES_PATH.exists():
-            logger.warning("projects_data.json not found at %s", FIXTURES_PATH)
-            return
-        try:
-            with open(FIXTURES_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                for item in data:
-                    detail = ProjectDetailResponse(**item)
-                    self._projects_cache[detail.slug] = detail
-            logger.info("Loaded %d project fixtures: %s", len(self._projects_cache), list(self._projects_cache.keys()))
-        except Exception:
-            logger.exception("Failed to load projects_data.json")
 
-    def get_all_projects(self) -> List[ProjectSummaryResponse]:
-        ordered = [self._projects_cache[s] for s in CURATED_ORDER if s in self._projects_cache]
-        return [
-            ProjectSummaryResponse(
-                slug=p.slug,
-                title=p.title,
-                tagline=p.tagline,
-                category=p.category,
-                tags=p.tags,
-                github_url=p.github_url,
-                demo_url=p.demo_url,
-                stars=p.stars,
-                forks=p.forks,
-                language=p.language,
-                pushed_at=p.pushed_at,
-            )
-            for p in ordered
-        ]
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
-    def get_project_by_slug(self, slug: str) -> Optional[ProjectDetailResponse]:
-        return self._projects_cache.get(slug)
 
-    @staticmethod
-    def _apply_meta(project: ProjectDetailResponse, meta: dict) -> None:
-        # Mutate the fixture singleton in place so repeated reads stay cheap.
-        project.stars = meta.get("stars", 0)
-        project.forks = meta.get("forks", 0)
-        project.language = meta.get("language")
-        project.pushed_at = meta.get("pushed_at")
+async def _fetch_owned_repos(client: httpx.AsyncClient) -> Optional[List[dict]]:
+    """All repos the token owner owns (paginated). None on any upstream failure."""
+    repos: List[dict] = []
+    for page in range(1, MAX_PAGES + 1):
+        res = await client.get(
+            f"{GITHUB_API}/user/repos",
+            params={"affiliation": "owner", "visibility": "all", "per_page": 100, "page": page},
+            headers=_headers(),
+        )
+        if res.status_code != 200:
+            logger.warning("Owned repos fetch page %s -> %s", page, res.status_code)
+            return None
+        data = res.json()
+        if not isinstance(data, list):
+            return None
+        repos.extend(data)
+        if len(data) < 100:
+            break
+    return repos
 
-    async def _enrich_with_meta(self, project: ProjectDetailResponse) -> ProjectDetailResponse:
-        """Fetch live stars/forks/language/pushed_at for one slug (no-op without token)."""
-        if not settings.GITHUB_TOKEN:
-            return project
 
-        cache_key = f"repo_meta_{project.slug}"
-        cached_meta = get_cached(cache_key)
-        if cached_meta is not None:
-            self._apply_meta(project, cached_meta)
-            return project
+def select_projects(repos: List[dict], owner: str) -> List[ProjectItem]:
+    """Public, non-fork, non-archived repos owned by `owner`; top 5 by stars, then recent push."""
+    owned = [
+        r for r in repos
+        if (r.get("owner") or {}).get("login", "").lower() == owner.lower()
+        and not r.get("private")
+        and not r.get("fork")
+        and not r.get("archived")
+        and r.get("name")
+        and r.get("html_url")
+    ]
+    owned.sort(key=lambda r: r.get("pushed_at") or "", reverse=True)
+    owned.sort(key=lambda r: r.get("stargazers_count") or 0, reverse=True)  # stable: pushed_at breaks ties
+    return [
+        ProjectItem(
+            name=r["name"],
+            language=r.get("language"),
+            description=r.get("description"),
+            html_url=r["html_url"],
+        )
+        for r in owned[:MAX_PROJECTS]
+    ]
 
-        repo_name = REPO_NAME_BY_SLUG.get(project.slug, project.title)
-        defaults = {"stars": 0, "forks": 0, "language": None, "pushed_at": None}
+
+def _write_snapshot(projects: List[ProjectItem]) -> None:
+    path = _snapshot_path()
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text(json.dumps([p.model_dump() for p in projects], indent=2), encoding="utf-8")
+        os.replace(tmp, path)  # atomic: a crash never leaves a half-written snapshot
+    except OSError:
+        logger.exception("Failed to write projects snapshot to %s", path)
+
+
+def _read_projects_file(path: Path) -> Optional[List[ProjectItem]]:
+    if not path.exists():
+        return None
+    try:
+        return [ProjectItem(**item) for item in json.loads(path.read_text(encoding="utf-8"))]
+    except Exception:
+        logger.exception("Invalid projects file at %s", path)
+        return None
+
+
+def _fallback() -> ProjectsResponse:
+    snapshot = _read_projects_file(_snapshot_path())
+    if snapshot is not None:
+        return ProjectsResponse(projects=snapshot, is_mock=True, source="snapshot", cached_at=_now())
+    fixture = _read_projects_file(FIXTURE_PATH) or []
+    return ProjectsResponse(projects=fixture, is_mock=True, source="fixture", cached_at=_now())
+
+
+async def get_projects() -> ProjectsResponse:
+    cached = get_cached(CACHE_KEY)
+    if cached is not None:
+        return cached
+
+    response: Optional[ProjectsResponse] = None
+    if settings.GITHUB_TOKEN:
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                meta = await fetch_repo_meta(client, settings.GITHUB_USERNAME, repo_name, _headers())
+                repos = await _fetch_owned_repos(client)
+            if repos is not None:
+                projects = select_projects(repos, settings.GITHUB_USERNAME)
+                _write_snapshot(projects)
+                response = ProjectsResponse(projects=projects, is_mock=False, source="live", cached_at=_now())
         except Exception:
-            logger.exception("Repo meta enrichment failed for slug %s", project.slug)
-            meta = defaults
+            logger.exception("Live projects fetch failed")
 
-        # Cache defaults on failure too, so a down/slow GitHub is not hammered.
-        set_cached(cache_key, meta)
-        self._apply_meta(project, meta)
-        return project
-
-    async def get_all_projects_with_meta(self) -> List[ProjectSummaryResponse]:
-        # Enrich each curated project concurrently; on any failure keep fixture defaults
-        ordered = [self._projects_cache[s] for s in CURATED_ORDER if s in self._projects_cache]
-        if settings.GITHUB_TOKEN:
-            await asyncio.gather(*[self._enrich_with_meta(p) for p in ordered], return_exceptions=True)
-        return self.get_all_projects()
-
-    async def get_project_by_slug_with_meta(self, slug: str) -> Optional[ProjectDetailResponse]:
-        project = self.get_project_by_slug(slug)
-        if project is None:
-            return None
-        return await self._enrich_with_meta(project)
-
-
-project_service = ProjectService()
+    if response is None:
+        response = _fallback()
+    # Cache fallbacks too so a down/rate-limited GitHub isn't hammered every request.
+    set_cached(CACHE_KEY, response)
+    return response

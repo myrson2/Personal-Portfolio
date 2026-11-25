@@ -225,21 +225,6 @@ async def compute_total_commits(client: httpx.AsyncClient, username: str, header
     return sum(counts)
 
 
-async def fetch_repo_meta(client: httpx.AsyncClient, owner: str, repo: str, headers: dict) -> dict:
-    """Return {'stars','forks','language','pushed_at'} for one repo (defaults on failure)."""
-    defaults = {"stars": 0, "forks": 0, "language": None, "pushed_at": None}
-    res = await client.get(f"{GITHUB_API}/repos/{owner}/{repo}", headers=headers)
-    if res.status_code != 200:
-        return defaults
-    data = res.json()
-    return {
-        "stars": data.get("stargazers_count", 0),
-        "forks": data.get("forks_count", 0),
-        "language": data.get("language"),
-        "pushed_at": data.get("pushed_at"),
-    }
-
-
 async def refresh_commits_background(username: str) -> None:
     """BackgroundTasks entry: recompute commits_total and patch overview cache."""
     if not settings.GITHUB_TOKEN:

@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     # Cache settings (seconds)
     CACHE_TTL_SECONDS: int = Field(default=1800)
 
+    # Last-known-good projects snapshot (relative paths resolve from backend/)
+    PROJECTS_SNAPSHOT_PATH: str = Field(default="data/projects_snapshot.json")
+
     # Resend Email Delivery
     RESEND_API_KEY: str = Field(default="")
     RESEND_TO_EMAIL: str = Field(default="")

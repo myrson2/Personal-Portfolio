@@ -29,6 +29,9 @@ coverage/
 htmlcov/
 .pytest_cache/
 
+# Runtime projects snapshot (last-known-good GitHub data)
+backend/data/
+
 
 
 .vercel

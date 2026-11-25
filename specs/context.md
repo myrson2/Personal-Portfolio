@@ -1,10 +1,10 @@
 # Implementation Context & Historical Record
 
-- **Current Milestone**: Milestone 2 closeout (includes the Milestone 1 telemetry/showcase backfill defined in `specs/roadmap.md`)
-- **Active Feature ID**: `FEAT-M2-CLOSEOUT-RELEASE`
-- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`, `FEAT-M2-CICD`, `FEAT-M1-GITHUB-LIVE`
-- **Status**: Documentation updated 2026-11-19; Render/Vercel redeploy and live verification still pending
-- **Completed At**: 2026-11-06T14:40:00+08:00 (documentation closeout: 2026-11-19)
+- **Current Milestone**: Post-M2 maintenance (Projects section refactor — backend half)
+- **Active Feature ID**: `FEAT-PROJECTS-OWNED-REPOS`
+- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`, `FEAT-M2-CICD`, `FEAT-M1-GITHUB-LIVE`, `FEAT-M2-CLOSEOUT-RELEASE`
+- **Status**: Backend implemented 2026-11-25 (38/38 pytest); frontend consumption of the new `/api/projects` contract pending; Render/Vercel redeploy and live verification still pending
+- **Completed At**: 2026-11-25 (backend)
 - **Author / Lead**: Jose Myrson O. Beros
 
 ---
@@ -15,7 +15,14 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) d
 
 Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) and the five-tab project case-study modal (`FEAT-M2-PROJECT-DEEP-DIVE`).
 
-**Latest Delivery — Live GitHub Telemetry + Showcase (`FEAT-M1-GITHUB-LIVE`):**
+**Latest Delivery — GitHub-Sourced Projects Backend (`FEAT-PROJECTS-OWNED-REPOS`, 2026-11-25):**
+1. `GET /api/projects` now returns `{ projects: [{name, language, description, html_url}], is_mock, source: "live"|"snapshot"|"fixture", cached_at }`. Items are strict (`extra="forbid"`) and exactly 4 fields.
+2. Source of truth is the authenticated `GET /user/repos?affiliation=owner&visibility=all`, filtered to `owner.login == myrson2`, public, non-fork and non-archived. The top 5 are chosen by stars (ties broken by latest push). `language` is GitHub's derived primary language, `null` when absent, never guessed.
+3. Fallback chain: live → on-disk last-known-good snapshot (`PROJECTS_SNAPSHOT_PATH`, default `backend/data/projects_snapshot.json`, gitignored, atomic write) → committed empty fixture. All responses are TTL-cached.
+4. Removed: `GET /api/projects/{slug}`, the case-study models, the curated order and slug map, `projects_data.json` (invented stacks/metrics), and the unused `fetch_repo_meta`.
+5. The frontend is unchanged. `ProjectsSection` is still hardcoded and `fetchProjects()` is unused, so the old showcase stays visible until the frontend refactor. The deep-dive modal's detail call now 404s and uses its client fallback.
+
+**Previous Delivery — Live GitHub Telemetry + Showcase (`FEAT-M1-GITHUB-LIVE`):**
 1. **Live overview telemetry**: `GET /api/github/overview` now reads `total_repos` from the authenticated `GET /user/repos?visibility=all&affiliation=owner` endpoint, so private repositories are included when the token can read them (falling back to `public_repos` from `GET /users/{username}`). `total_commits` remains the sum of all non-fork public repositories. `is_mock` is `false` on a live GitHub response.
 2. **Background commit refresh**: the expensive commit scan runs in FastAPI `BackgroundTasks` after the response. The first uncached request serves the last-known fixture value immediately; the recomputed total is cached and patched into the overview cache for subsequent requests. A per-username lock prevents duplicate concurrent scans, and commit pages are fetched with bounded concurrency (`5`).
 3. **Resilient fallback**: missing token, `401/403/429`, timeout, malformed JSON, or a failed upstream call returns the deterministic fixture with `is_mock: true`, HTTP `200`, and a cached result.
@@ -54,10 +61,14 @@ Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) 
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/specification.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/specification.md)
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/implementation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/implementation.md)
   - [`specs/feature/2026-11-06-live-github-telemetry-showcase/validation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-06-live-github-telemetry-showcase/validation.md)
-- **Milestone 2 Closeout & Release Readiness (current)**:
+- **Milestone 2 Closeout & Release Readiness**:
   - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/specification.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/specification.md)
   - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/implementation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/implementation.md)
   - [`specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/validation.md`](file:///C:/Users/merss/Personal-Portfolio/specs/feature/2026-11-19-milestone-2-closeout-and-release-readiness/validation.md)
+- **GitHub-Sourced Projects Backend (current)**:
+  - [`specs/feature/2026-11-25-owned-repo-projects-backend/specification.md`](file:///C:/Users/JoseMyrsonOBeros/Documents/Projects/Personal-Portfolio/specs/feature/2026-11-25-owned-repo-projects-backend/specification.md)
+  - [`specs/feature/2026-11-25-owned-repo-projects-backend/implementation.md`](file:///C:/Users/JoseMyrsonOBeros/Documents/Projects/Personal-Portfolio/specs/feature/2026-11-25-owned-repo-projects-backend/implementation.md)
+  - [`specs/feature/2026-11-25-owned-repo-projects-backend/validation.md`](file:///C:/Users/JoseMyrsonOBeros/Documents/Projects/Personal-Portfolio/specs/feature/2026-11-25-owned-repo-projects-backend/validation.md)
 
 ### Backend Gateway (`/backend`)
 - [`backend/app/services/github_service.py`](file:///C:/Users/merss/Personal-Portfolio/backend/app/services/github_service.py): Live GitHub REST/GraphQL client, fixture fallback, `overview_*`/`calendar_*`/`commits_total_*` TTL cache keys, bounded parallel commit counting, and background refresh with a duplicate-scan guard.

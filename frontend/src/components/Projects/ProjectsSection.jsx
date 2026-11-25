@@ -1,129 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Github, BookOpen } from 'lucide-react';
-import ProjectDeepDiveModal from '../Modals/ProjectDeepDiveModal';
-
-const FEATURED_PROJECTS = [
-  {
-    id: 1,
-    slug: 'eMSME',
-    title: 'eMSME',
-    description: 'AI-powered enterprise inventory and operations platform with real-time monitoring and predictive maintenance insights.',
-    tags: ['Python', 'FastAPI', 'React', 'PostgreSQL'],
-    github: 'https://github.com/myrson2/eMSME',
-    demo: '#',
-  },
-  {
-    id: 2,
-    slug: 'colorgame',
-    title: 'ColorGame',
-    description: 'Interactive web simulation of the traditional carnival Color Betting Game with synchronized 3-reel animations and payout engine.',
-    tags: ['React 19', 'Vite', 'JavaScript ES6+', 'CSS Glassmorphism'],
-    github: 'https://github.com/myrson2/ColorGame',
-    demo: '#',
-  },
-];
-
-const COMPACT_PROJECTS = [
-  {
-    name: 'Personal Portfolio Architecture',
-    description: 'Editorial developer portfolio featuring tactile retro pixel-art styling, in-memory TTL caching, and zero secret leakage proxy.',
-  },
-  {
-    name: 'GDG PUP Community Portal',
-    description: 'Event registration and automated digital badge issuing platform for student engineers and campus hackathon participants.',
-  },
-  {
-    name: 'AWS Cloud Club Assistant',
-    description: 'Serverless Discord integration providing cloud architectural quiz challenges and real-time contributor leaderboards.',
-  },
-];
+import { ArrowRight, Github } from 'lucide-react';
+import { fetchProjects } from '../../services/api';
 
 export default function ProjectsSection() {
-  const [activeModalSlug, setActiveModalSlug] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash;
-      if (hash && hash.startsWith('#project/')) {
-        const slug = hash.replace('#project/', '').trim();
-        if (slug) {
-          setActiveModalSlug(slug);
-        }
-      } else if (!hash || hash === '#projects') {
-        setActiveModalSlug(null);
-      }
+    let isMounted = true;
+    setLoading(true);
+
+    fetchProjects()
+      .then((data) => {
+        if (!isMounted) return;
+        setProjects(Array.isArray(data?.projects) ? data.projects : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setProjects([]);
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
     };
-
-    handleHash();
-    window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
   }, []);
-
-  const openCaseStudy = (slug) => {
-    window.location.hash = `#project/${slug}`;
-    setActiveModalSlug(slug);
-  };
 
   return (
     <section className="editorial-section" id="projects">
       <div className="editorial-label">Projects</div>
       <div className="editorial-content">
-        {/* 2 Featured Hero Cards */}
-        <div className="featured-projects-grid">
-          {FEATURED_PROJECTS.map((project) => (
-            <div key={project.id} className="featured-project-card">
-              <div className="featured-card-preview">
-                <div className="d-flex flex-column align-items-center justify-content-center text-muted">
-                  <span className="small font-monospace fw-semibold">[ {project.title} Preview ]</span>
-                </div>
-              </div>
-              <div className="featured-card-body">
-                <div className="d-flex justify-content-between align-items-start">
-                  <h3 className="featured-card-title">{project.title}</h3>
-                  <div className="d-flex gap-2">
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-dark hover-opacity"
-                      aria-label="GitHub Repository"
-                    >
-                      <Github size={16} />
-                    </a>
+        <div className="compact-projects-list">
+          {loading ? (
+            <div className="compact-projects-skeleton" aria-label="Loading projects">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="compact-project-row skeleton-row">
+                  <div className="compact-project-name">
+                    <span className="skeleton-line skeleton-title" />
+                  </div>
+                  <div className="compact-project-body">
+                    <span className="skeleton-line skeleton-desc" />
+                    <span className="skeleton-line skeleton-badge" />
+                  </div>
+                  <div className="compact-project-actions">
+                    <span className="skeleton-line skeleton-icon" />
                   </div>
                 </div>
-                <p className="featured-card-desc">{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="project-tag">
-                      {tag}
-                    </span>
-                  ))}
+              ))}
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="compact-projects-empty text-muted small py-3 font-monospace">
+              No repositories currently available to display.
+            </div>
+          ) : (
+            projects.map((proj) => (
+              <div key={proj.name} className="compact-project-row">
+                <div className="compact-project-name">{proj.name}</div>
+                <div className="compact-project-body">
+                  {proj.description && (
+                    <div className="compact-project-desc">{proj.description}</div>
+                  )}
+                  {proj.language && (
+                    <div className="project-tags">
+                      <span className="project-tag font-monospace">{proj.language}</span>
+                    </div>
+                  )}
                 </div>
-
-                <div className="mt-3 pt-2 border-top border-dark-subtle d-flex justify-content-between align-items-center">
-                  <button
-                    type="button"
-                    onClick={() => openCaseStudy(project.slug)}
-                    className="btn btn-sm btn-outline-dark rounded-0 font-monospace d-flex align-items-center gap-1"
-                    aria-label={`Open case study for ${project.title}`}
-                  >
-                    <BookOpen size={14} /> Case Study <ArrowRight size={12} />
-                  </button>
+                <div className="compact-project-actions">
+                  {proj.html_url && (
+                    <a
+                      href={proj.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="compact-project-github-btn"
+                      aria-label={`View ${proj.name} repository on GitHub`}
+                    >
+                      <Github size={18} />
+                    </a>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Compact Tabular Row Items */}
-        <div className="compact-projects-list">
-          {COMPACT_PROJECTS.map((proj, idx) => (
-            <div key={idx} className="compact-project-row">
-              <div className="compact-project-name">{proj.name}</div>
-              <div className="compact-project-desc">{proj.description}</div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* All Projects Link */}
@@ -138,13 +97,6 @@ export default function ProjectsSection() {
           </a>
         </div>
       </div>
-
-      {/* Interactive Case Study Modal */}
-      <ProjectDeepDiveModal
-        slug={activeModalSlug}
-        isOpen={Boolean(activeModalSlug)}
-        onClose={() => setActiveModalSlug(null)}
-      />
     </section>
   );
 }

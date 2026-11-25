@@ -1,10 +1,10 @@
 # Implementation Context & Historical Record
 
-- **Current Milestone**: Post-M2 maintenance (Projects section refactor — backend half)
-- **Active Feature ID**: `FEAT-PROJECTS-OWNED-REPOS`
-- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`, `FEAT-M2-CICD`, `FEAT-M1-GITHUB-LIVE`, `FEAT-M2-CLOSEOUT-RELEASE`
-- **Status**: Backend implemented 2026-11-25 (38/38 pytest); frontend consumption of the new `/api/projects` contract pending; Render/Vercel redeploy and live verification still pending
-- **Completed At**: 2026-11-25 (backend)
+- **Current Milestone**: Post-M2 maintenance (Projects section full refactor — backend & frontend complete)
+- **Active Feature ID**: `FEAT-PROJECTS-FRONTEND-REFACTOR`
+- **Previous Features**: `FEAT-M1-CORE-SHOWCASE`, `FEAT-M2-LIVE-CONTACT-GATEWAY`, `FEAT-M2-PROJECT-DEEP-DIVE`, `FEAT-M2-CICD`, `FEAT-M1-GITHUB-LIVE`, `FEAT-M2-CLOSEOUT-RELEASE`, `FEAT-PROJECTS-OWNED-REPOS`
+- **Status**: Backend implemented (38/38 pytest); Frontend refactored & wired to live endpoint (18/18 Vitest, clean Vite build, zero ESLint errors); Render/Vercel redeploy pending
+- **Completed At**: 2026-11-25 (backend & frontend)
 - **Author / Lead**: Jose Myrson O. Beros
 
 ---
@@ -15,7 +15,14 @@ Milestone 1 established the foundational monorepo (`/frontend` and `/backend`) d
 
 Milestone 2 added live Resend contact delivery (`FEAT-M2-LIVE-CONTACT-GATEWAY`) and the five-tab project case-study modal (`FEAT-M2-PROJECT-DEEP-DIVE`).
 
-**Latest Delivery — GitHub-Sourced Projects Backend (`FEAT-PROJECTS-OWNED-REPOS`, 2026-11-25):**
+**Latest Delivery — Projects Section Frontend Tabular Refactor (`FEAT-PROJECTS-FRONTEND-REFACTOR`, 2026-11-25):**
+1. `ProjectsSection.jsx` now renders a clean, scannable editorial tabular list directly wired to `fetchProjects()` from `/api/projects`.
+2. Each row displays the repository name on the left (`.compact-project-name`), repository description in italic text with the derived language badge (`[ Language ]`) positioned underneath in the center (`.compact-project-body`), and a minimal `<Github />` icon button on the right redirecting to `html_url` in a new tab. When description or language is null, it is cleanly omitted without filler or guessed values.
+3. Offline & cold-start resilience: successful `/api/projects` responses are saved to `localStorage` (`portfolio_projects_cache`). If the backend is cold-starting or offline, cached projects are displayed immediately. If no cache exists, a clean empty placeholder is shown with zero invented projects.
+4. Purged dead code: deleted `ProjectDeepDiveModal.jsx`, `ProjectDeepDiveModal.test.jsx`, `FALLBACK_PROJECTS`, `fetchProjectDetails()`, and unused `.deep-dive-*` / `.featured-project-*` styles, reducing production JS bundle from 200.17 kB to 179.25 kB.
+5. All 18 Vitest frontend tests and 38 backend Pytest tests pass cleanly; Vite production build succeeds with 0 errors.
+
+**Previous Delivery — GitHub-Sourced Projects Backend (`FEAT-PROJECTS-OWNED-REPOS`, 2026-11-25):**
 1. `GET /api/projects` now returns `{ projects: [{name, language, description, html_url}], is_mock, source: "live"|"snapshot"|"fixture", cached_at }`. Items are strict (`extra="forbid"`) and exactly 4 fields.
 2. Source of truth is the authenticated `GET /user/repos?affiliation=owner&visibility=all`, filtered to `owner.login == myrson2`, public, non-fork and non-archived. The top 5 are chosen by stars (ties broken by latest push). `language` is GitHub's derived primary language, `null` when absent, never guessed.
 3. Fallback chain: live → on-disk last-known-good snapshot (`PROJECTS_SNAPSHOT_PATH`, default `backend/data/projects_snapshot.json`, gitignored, atomic write) → committed empty fixture. All responses are TTL-cached.
